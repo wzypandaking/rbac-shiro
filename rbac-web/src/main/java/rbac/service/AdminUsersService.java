@@ -155,4 +155,17 @@ public class AdminUsersService {
         return Result.wrapResult(SystemLang.SUCCESS);
     }
 
+    /**
+     *
+     * @param adminUsers
+     * @return
+     */
+    public Result changePassword(AdminUsers adminUsers, String password) {
+        adminUsers.setPassword(buildPassword(password, adminUsers.getSalt()));
+        adminUsersDao.save(adminUsers);
+        return Result.wrapResult(SystemLang.SUCCESS);
+    }
+
+
+
 }

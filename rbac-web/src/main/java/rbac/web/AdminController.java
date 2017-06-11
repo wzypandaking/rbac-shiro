@@ -1,6 +1,7 @@
 package rbac.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -21,9 +22,11 @@ import rbac.service.AdminDepartmentService;
 import rbac.service.AdminUsersService;
 import rbac.utils.BeanUtil;
 import rbac.utils.Result;
+import rbac.web.lang.AdminUsersLang;
 import rbac.web.lang.LoginLang;
 import rbac.web.lang.SystemLang;
 import rbac.web.param.LoginParam;
+import rbac.web.param.UserChangePassword;
 import rbac.web.vo.ProfileManageVO;
 import rbac.web.vo.ProfileVO;
 
@@ -95,6 +98,23 @@ public class AdminController {
     public Result<ProfileManageVO> profile(HttpServletRequest request) {
         AdminUsers adminUsers = adminUsersDao.findById((Long) request.getSession().getAttribute("id"));
         return Result.wrapResult(BeanUtil.copy(adminUsers, ProfileManageVO.class));
+    }
+
+    @RequestMapping(value = "change_password", method = RequestMethod.POST)
+    @ResponseBody
+    public Result changePassword(UserChangePassword password, HttpServletRequest request) {
+        AdminUsers adminUsers = adminUsersDao.findById((Long) request.getSession().getAttribute("id"));
+        if (adminUsers == null) {
+            return Result.wrapResult(AdminUsersLang.NOT_FOUND);
+        }
+        AdminUsers user = adminUsersService.checkUserAndPassword(adminUsers.getUsername(), password.getPassword().get(0));
+        if (user == null) {
+            return Result.wrapResult(AdminUsersLang.PASSWORD_ERROR);
+        }
+        if (StringUtils.isEmpty(password.getPassword().get(1)) || ! password.getPassword().get(1).equals(password.getPassword().get(2))) {
+            return Result.wrapResult(AdminUsersLang.PASSWORD_CHECK_FAILED);
+        }
+        return adminUsersService.changePassword(user, password.getPassword().get(1));
     }
 
     @RequestMapping("avatar")
