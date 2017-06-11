@@ -22,40 +22,11 @@
 </head>
 <body>
 <section class="vbox">
-    <header class="bg-dark dk header navbar navbar-fixed-top-xs">
-        <div class="navbar-header aside-md">
-            <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i
-                    class="fa fa-bars"></i> </a> <a href="#" class="navbar-brand" data-toggle="fullscreen"><img
-                src="images/logo.png" class="m-r-sm">权限系统</a> <a class="btn btn-link visible-xs" data-toggle="dropdown"
-                                                                 data-target=".nav-user"> <i class="fa fa-cog"></i> </a>
-        </div>
-        <ul class="nav navbar-nav navbar-right hidden-xs nav-user">
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="profile"></a>
-                <ul class="dropdown-menu animated fadeInRight">
-                    <span class="arrow top"></span>
-                    <li><a href="profile.html">个人信息</a></li>
-                    <li class="divider"></li>
-                    <li><a href="javascript:" class="logout">退出</a></li>
-                </ul>
-            </li>
-        </ul>
-    </header>
+    <header th:include="template/header" class="bg-dark dk header navbar navbar-fixed-top-xs"></header>
     <section>
-        <section class="hbox stretch"> <!-- .aside -->
-            <aside class="bg-dark lter aside-md hidden-print" id="nav">
-                <section class="vbox">
-                    <section class="w-f scrollable">
-                        <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333">
-                            <!-- nav -->
-                            <nav class="nav-primary hidden-xs" id="nav-container"></nav>
-                            <!-- / nav --> </div>
-                    </section>
-                    <footer class="footer lt hidden-xs b-t b-dark">
-                        <a href="#nav" data-toggle="class:nav-xs" class="pull-right btn btn-sm btn-dark btn-icon"> <i
-                                class="fa fa-angle-left text"></i> <i class="fa fa-angle-right text-active"></i> </a>
-                    </footer>
-                </section>
-            </aside>
+        <section class="hbox stretch">
+            <!-- .aside -->
+            <aside th:include="template/menu" class="bg-dark lter aside-md hidden-print" id="nav"></aside>
             <!-- /.aside -->
 
             <section id="content">
@@ -89,10 +60,9 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<div th:replace="template/js"></div>
 <script src="base.js"></script>
 <script src="menu.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
 <script src="js/nestable/jquery.nestable.js" cache="false"></script>
 <script>
     var groupUuid = getQueryString(window.location, 'uuid');
