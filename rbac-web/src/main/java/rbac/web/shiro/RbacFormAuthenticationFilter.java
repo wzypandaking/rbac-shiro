@@ -1,6 +1,7 @@
 package rbac.web.shiro;
 
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.springframework.util.AntPathMatcher;
 import rbac.utils.AdministratorUtil;
 
 import javax.servlet.ServletRequest;
@@ -15,10 +16,11 @@ import java.util.List;
 public class RbacFormAuthenticationFilter extends FormAuthenticationFilter {
 
     private List<String> excludeURI = new ArrayList<>();
+    private AntPathMatcher matcher = new AntPathMatcher();
 
     public RbacFormAuthenticationFilter() {
-        excludeURI.add("/admin/login");
-        excludeURI.add("/client/api/auth/check");
+        excludeURI.add("/rbac/admin/**");
+        excludeURI.add("/rbac/client/api/**");
     }
 
 
@@ -29,7 +31,7 @@ public class RbacFormAuthenticationFilter extends FormAuthenticationFilter {
         }
         String requestURI = ((HttpServletRequest) request).getRequestURI();
         for (String item : excludeURI) {
-            if (requestURI.contains(item)) {
+            if (matcher.match(item, requestURI)) {
                 return true;
             }
         }
