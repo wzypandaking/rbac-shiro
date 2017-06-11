@@ -9,7 +9,12 @@
        data-target=".nav-user"> <i class="fa fa-cog"></i> </a>
 </div>
 <ul class="nav navbar-nav navbar-right hidden-xs nav-user">
-    <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="profile"></a>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="profile">
+            <span class="thumb-sm avatar pull-left"><img src="admin/avatar" style="width: 28px;height: 28px"></span>
+            {{adminUser.username}}
+            <b class="caret"></b>
+        </a>
         <ul class="dropdown-menu animated fadeInRight">
             <span class="arrow top"></span>
             <li><a href="profile.html">个人信息</a></li>

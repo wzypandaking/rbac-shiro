@@ -52,15 +52,16 @@ var buildPage = function(ele, result, callback) {
 };
 
 
+var profileTemplate = loadArtTemplate("profile");
 commonAjax({
     url: '/rbac/admin/user',
     dataType: 'json',
     success: function (result) {
-        var adminUser = result.data;
-        $('a#profile')
-            .append('<span class="thumb-sm avatar pull-left"><img src="' + adminUser.avatar + '"></span>')
-            .append(adminUser.username)
-            .append('<b class="caret"></b>');
+        var render = template.compile(profileTemplate);
+        var html = render({
+            adminUser:result.data
+        });
+        $('a#profile').html(html);
     }
 });
 $('a.logout').click(function () {

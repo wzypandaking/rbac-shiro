@@ -14,38 +14,43 @@
             <!-- /.aside -->
             <section id="content">
                 <section class="vbox">
-                    <header class="header bg-white b-b b-light">
-                        <p>Widgets <small>(colorful)</small></p>
-                    </header>
-                    <section class="scrollable wrapper">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <section class="panel panel-default" id="auth_profile">
-                                    <header class="panel-heading bg-danger lt no-border">
-                                        <div class="clearfix">
-                                            <a href="#" class="pull-left thumb avatar b-3x m-r">
-                                                <img src="{{profile.avatar}}" class="img-circle">
-                                            </a>
-                                            <div class="clear">
-                                                <div class="h3 m-t-xs m-b-xs text-white"> {{profile.username}} <i class="fa fa-circle text-white pull-right text-xs m-t-sm"></i> </div>
-                                                <a href="/rbac/profile_change_password.html"><small class="text-muted">修改密码</small></a>
+                    <section class="scrollable padder">
+                        <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                            <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
+                            <li class="active">设置</li>
+                            <li class="active">个人信息</li>
+                        </ul>
+                        <section class="scrollable wrapper">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <section class="panel panel-default" id="auth_profile">
+                                        <header class="panel-heading bg-danger lt no-border">
+                                            <div class="clearfix">
+                                                <a href="#" class="pull-left thumb avatar b-3x m-r">
+                                                    <img src="admin/avatar" class="img-circle" style="width: 58px;height: 58px;" id="avatar">
+                                                </a>
+                                                <a href="#" class="pull-left thumb avatar b-3x m-r" style="z-index: 1000;position: absolute;left: 30px;" title="点击切换头像">
+                                                    <div id="pictureBtn"></div>
+                                                </a>
+                                                <div class="clear">
+                                                    <div class="h3 m-t-xs m-b-xs text-white"> {{profile.username}} </div>
+                                                    <a href="/rbac/profile_change_password.html"><small class="text-muted">修改密码</small></a>
+                                                </div>
                                             </div>
+                                        </header>
+                                        <div class="list-group no-radius alt">
+                                            <a class="list-group-item" href="mailto:{{profile.email}}"> <i class="fa fa-envelope icon-muted"></i> {{profile.email}}</a>
+                                            {{if profile.phone}}
+                                            <a class="list-group-item" href="tel:{{profile.phone}}"> <i class="fa fa-phone icon-muted"></i> {{profile.phone}} </a>
+                                            {{else}}
+                                            <a class="list-group-item setting phone" href="#"> <i class="fa fa-phone icon-muted"></i> 设置 </a>
+                                            {{/if}}
                                         </div>
-                                    </header>
-                                    <div class="list-group no-radius alt">
-                                        <a class="list-group-item" href="mailto:{{profile.email}}"> <i class="fa fa-envelope icon-muted"></i> {{profile.email}}</a>
-                                        {{if profile.phone}}
-                                        <a class="list-group-item" href="tel:{{profile.phone}}"> <i class="fa fa-phone icon-muted"></i> {{profile.phone}} </a>
-                                        {{else}}
-                                        <a class="list-group-item setting phone" href="#"> <i class="fa fa-phone icon-muted"></i> 设置 </a>
-                                        {{/if}}
-                                    </div>
-                                </section>
-                                <div id="pictureBtn"></div>
-                                <a href="javascript:$('#pictureBtn-button').click()">aa</a>
+                                    </section>
+                                </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
+                </section>
                 </section>
                 <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a> </section>
                 <aside class="bg-light lter b-l aside-md hide" id="notes">
@@ -59,24 +64,23 @@
 <script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
 <script src="js/charts/easypiechart/jquery.easy-pie-chart.js" cache="false"></script>
 <script src="js/charts/sparkline/jquery.sparkline.min.js" cache="false"></script>
-
 <script src="uploadify/jquery.uploadify.min.js"></script>
+<script src="template-web.js"></script>
 
 <script src="base.js"></script>
 <script src="menu.js"></script>
-<script src="template-web.js"></script>
 <script>
     $(document).on('click', '.setting', function () {
         if($(this).hasClass("phone")) {
             layer.open("setting")
         }
     });
-    var profileTemplate = loadArtTemplate("auth_profile");
+    var authProfileTemplate = loadArtTemplate("auth_profile");
     commonAjax({
         url:'/rbac/admin/profile',
         async:false,
         success:function (result) {
-            var render = template.compile(profileTemplate);
+            var render = template.compile(authProfileTemplate);
             var html = render({
                 profile:result.data
             });
@@ -86,14 +90,15 @@
     $('#pictureBtn').uploadify({
         swf: 'uploadify/uploadify.swf',
         uploader : 'admin/profile/avatar',
-        buttonText:'换',
+        buttonText:'',
         multi:false,
-        buttonClass:'',
+        height:58,
+        width:58,
         onUploadError:function (file, errorCode, errorMsg, errorString) {
-            console.log(file, errorCode, errorMsg, errorString);
+            layer.alert("上传失败");
         },
         onUploadSuccess:function (file, data, response) {
-            console.log(file, data, response);
+            window.location.reload();
         }
     });
 </script>

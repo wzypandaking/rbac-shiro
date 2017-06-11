@@ -7,18 +7,18 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import rbac.dao.AdminUsersDao;
 import rbac.dao.repository.AdminUsers;
 import rbac.service.AdminDepartmentService;
 import rbac.service.AdminUsersService;
-import rbac.utils.AdministratorUtil;
 import rbac.utils.BeanUtil;
 import rbac.utils.Result;
 import rbac.web.lang.LoginLang;
@@ -118,7 +118,6 @@ public class AdminController {
         }
     }
 
-
     @RequestMapping(value = "profile/avatar", method = RequestMethod.POST)
     @ResponseBody
     public Result profileAvatar(MultipartRequest request) {
@@ -134,7 +133,8 @@ public class AdminController {
                 }
             }
         }
-        File file = new File(String.format("%s/%s_%s", folderName, System.currentTimeMillis(), multipartFile.getOriginalFilename()));
+        String filename = String.format("%s/%s_%s", folderName, System.currentTimeMillis(), multipartFile.getOriginalFilename());
+        File file = new File(filename);
         byte data[];
         try {
             InputStream stream = new BufferedInputStream(multipartFile.getInputStream());
@@ -146,6 +146,16 @@ public class AdminController {
             outputStream.write(data);
             outputStream.flush();
             outputStream.close();
+
+            {
+                HttpServletRequest r = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+                AdminUsers user =  adminUsersDao.findById((Long)r.getSession().getAttribute("id"));
+                if (user == null) {
+                    throw new RuntimeException("没有找到用户信息");
+                }
+                user.setAvatar(filename);
+                adminUsersDao.save(user);
+            }
         } catch (Exception e) {
             return Result.wrapResult(SystemLang.ERROR);
         }
