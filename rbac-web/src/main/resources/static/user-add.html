@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head th:include="template/top"></head>
+<body>
+<section class="vbox">
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <div class="panel panel-default" id="form-wizard">
+                            <div class="wizard clearfix">
+                                <ul class="steps">
+                                    <li data-target="#step1" class="active"><span class="badge badge-info">1</span>基础信息</li>
+                                    <li data-target="#step2"><span class="badge">2</span>附加信息</li>
+                                </ul>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-pane active" id="step1">
+                                    <form>
+                                        <div>
+                                            <p>账号:</p>
+                                            <input type="text" name="username" class="form-control" placeholder="请输入账号  6-20" autocomplete="off" data-validation="server" data-validation-url="/rbac/user/checkUsername" >
+                                        </div>
+                                        <div>
+                                            <p>密码:</p>
+                                            <input type="password" name="password" class="form-control" placeholder="密码 6-20位" data-validation="server" data-validation-url="/rbac/user/checkPassword">
+                                        </div>
+                                        <p>允许登录<a href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="是否允许登录权限系统">?</a>:</p>
+                                        <div class="m-b-sm">
+                                            <div class="btn-group" data-toggle="buttons">
+                                                <label class="btn btn-sm btn-info active">
+                                                    <input type="radio" value="0" name="status" checked="checked" id="option1">
+                                                    <i class="fa fa-check text-active"></i> 禁止 </label>
+                                                <label class="btn btn-sm btn-success">
+                                                    <input type="radio" value="1" name="status" id="option2">
+                                                    <i class="fa fa-check text-active"></i> 允许 </label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="step-pane" id="step2">
+                                    <form>
+                                        <div>
+                                            <p>头像:</p>
+                                            <input type="file" name="avatar" class="form-control" placeholder="上传头像">
+                                        </div>
+                                        <div>
+                                            <p>邮箱<a href="javascript:" data-toggle="tooltip" data-placement="top" data-original-title="用于找回密码">?</a>:</p>
+                                            <input type="text" name="email" autocomplete="off" class="form-control" placeholder="邮箱" data-validation="server" data-validation-url="/rbac/user/checkEmail">
+                                        </div>
+                                        <div>
+                                            <p>手机号<a href="javascript:" data-toggle="tooltip" data-placement="top" data-original-title="用于找回密码">?</a>:</p>
+                                            <input type="text" name="phone" autocomplete="off" class="form-control" placeholder="手机号" data-validation="server" data-validation-url="/rbac/user/checkMobile">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="actions m-t">
+                                    <button type="button" class="btn btn-default btn-sm btn-prev" disabled="disabled">上一步</button>
+                                    <button type="button" class="btn btn-default btn-sm btn-next">下一步</button>
+                                    <button type="submit" class="btn btn-default btn-sm " style="display: none">确认</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    var $dependency = $('#form-wizard');
+    var $form = $dependency.find('form');
+    var $stepBody = $dependency.find('div.step-pane');
+    var $stepHeader = $dependency.find('ul.steps');
+    var $stepButton = $dependency.find('div.actions').find('button');
+
+    var step = 0;
+    var goPosition;
+    var maxStep = $form.length - 1;
+
+    $.validate({
+        modules : 'security',
+        onSuccess:function(){
+            doStep(goPosition);
+        }
+    });
+
+    $form.submit(function(){
+        return false;
+    });
+
+    $stepButton.eq(2).click(function(){
+        if(step != maxStep) {
+            return;
+        }
+        var postData = [];
+        for(var i =0; i <= maxStep; i ++) {
+            postData.push($form.eq(i).serialize());
+        }
+        commonAjax({
+            url :   '/rbac/user/add',
+            data:   postData.join('&'),
+            type :  'post',
+            dateType:'json',
+            success:function(result) {
+                if(result.success) {
+                    window.parent.location.reload();
+                } else {
+                    layer.msg(result.message);
+                }
+            }
+        });
+    });
+
+    $stepButton.click(function() {
+        goPosition = $(this).index();
+        $form.eq(step).submit();
+    });
+
+
+    doStep = function(position){
+        $stepBody.removeClass('active');
+        $stepButton.removeAttr("disabled");
+
+        $stepHeader.find('li').removeClass('active');
+        $stepHeader.find('li>span').removeClass('active');
+        $stepHeader.find('li>span.badge').removeClass('badge-success');
+        $stepHeader.find('li>span.badge').removeClass('badge-info');
+
+        switch(position) {
+            case 0:
+                -- step;
+                if(step <= 0) {
+                    step = 0;
+                }
+                break;
+            case 1:
+                ++ step;
+                if(step >= maxStep) {
+                    step = maxStep;
+                }
+                break;
+        }
+
+        $stepBody.eq(step).addClass('active');
+        $stepHeader.find('li:eq(' + step + ')').addClass('active');
+        $stepHeader.find('li>span.badge:eq(' + step + ')').addClass('badge-info');
+        for(var i = 0;i <= step - 1; i ++) {
+            $dependency.find('li>span.badge:eq(' + i + ')').addClass('badge-success');
+        }
+
+        $stepButton.eq(2).hide();
+        $stepButton.eq(1).show();
+        if(step == 0) {
+            $stepButton.eq(0).attr("disabled", "disabled");
+        } else if(step == maxStep) {
+            $stepButton.eq(1).attr('disabled', 'disabled').hide();
+            $stepButton.eq(2).show();
+        }
+    }
+
+</script>
+
+</body>
+</html>

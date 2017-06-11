@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="bg-dark"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head th:include="template/top"></head>
+<body>
+<section id="content" class="m-t-lg wrapper-md animated fadeInUp">
+    <div class="container aside-xxl">
+        <a class="navbar-brand block" href="index.html">权限系统</a>
+        <section class="panel panel-default bg-white m-t-lg">
+            <header class="panel-heading text-center"><strong>登录</strong></header>
+            <form action="/rbac/admin/login" method="post" class="panel-body wrapper-lg">
+                <div class="form-group">
+                    <label class="control-label">账号</label>
+                    <input type="text" name="username" autocomplete="off" placeholder="请输入账号" class="form-control input-lg" data-validation="required" data-validation-error-msg="请输入账号" autofocus="autofocus" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">密码</label>
+                    <input type="password" name="password" placeholder="请输入密码" class="form-control input-lg" data-validation="required" data-validation-error-msg="请输入密码" />
+                </div>
+                <!--<div class="checkbox">-->
+                <!--<label>-->
+                <!--<input type="checkbox">-->
+                <!--Keep me logged in </label>-->
+                <!--</div>-->
+                <!--<a href="#" class="pull-right m-t-xs"><small>忘记密码?</small></a>-->
+                <button type="submit" class="btn btn-primary">登录</button>
+            </form>
+        </section>
+    </div>
+
+
+</section>
+<!-- footer -->
+<footer id="footer">
+    <div class="text-center padder">
+        <p>
+            <small>基于角色的权限管理系统 &copy; 2017</small>
+        </p>
+    </div>
+</footer>
+<!-- / footer -->
+<script src="js/app.v2.js"></script>
+<!-- Bootstrap --> <!-- App -->
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<!-- parsley -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    $.validate();
+    $('form').submit(function(){
+        var submitData = $(this).serialize();
+        $.ajax({
+            url :"/rbac/admin/login",
+            data:submitData,
+            method:"post",
+            dataType:"json",
+            success:function(result) {
+                if(result.success) {
+                    window.location.href = "/rbac/index.html";
+                } else {
+                    layer.msg(result.message);
+                }
+            }
+        });
+        return false;
+    });
+</script>
+</body>
+</html>

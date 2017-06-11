@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head th:include="template/top"></head>
+<body>
+<section class="vbox">
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <div class="panel panel-default" id="form-wizard">
+                            <div class="step-content">
+                                <form>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">版本名称:</label>
+                                        <div class="col-sm-10">
+                                            <div>
+                                            <input type="text" name="title" class="form-control" placeholder="请输入版本" autocomplete="off" data-validation="length" data-validation-length="min2" data-validation-error-msg="不能为空" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">版本使用协议:</label>
+                                        <div class="col-sm-10">
+                                            <div class="btn-toolbar m-b-sm btn-editor" data-role="editor-toolbar" data-target="#editor">
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                    <ul class="dropdown-menu">
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a data-edit="fontSize 5">
+                                                                <font size="5">Huge</font>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a data-edit="fontSize 3">
+                                                                <font size="3">Normal</font>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a data-edit="fontSize 1">
+                                                                <font size="1">Small</font>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a> <a class="btn btn-default btn-sm" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a> <a class="btn btn-default btn-sm" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a> <a class="btn btn-default btn-sm" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a> </div>
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a> <a class="btn btn-default btn-sm" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a> <a class="btn btn-default btn-sm" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a> <a class="btn btn-default btn-sm" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a> </div>
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a> <a class="btn btn-default btn-sm" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a> <a class="btn btn-default btn-sm" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a> <a class="btn btn-default btn-sm" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a> </div>
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                    <div class="dropdown-menu">
+                                                        <div class="input-group m-l-xs m-r-xs">
+                                                            <input class="form-control input-sm" placeholder="URL" type="text" data-edit="createLink">
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-default btn-sm" type="button">Add</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <a class="btn btn-default btn-sm" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a> </div>
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
+                                                    <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
+                                                </div>
+                                                <div class="btn-group"> <a class="btn btn-default btn-sm" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a> <a class="btn btn-default btn-sm" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a> </div>
+                                                <input type="text" name="content" class="form-control-trans pull-left" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="width:25px;height:28px;">
+                                            </div>
+                                            <div id="editor" class="form-control" style="overflow:scroll;height:150px;max-height:150px"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-sm btn-primary">确认</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<!-- wysiwyg -->
+<script src="js/wysiwyg/jquery.hotkeys.js" cache="false"></script>
+<script src="js/wysiwyg/bootstrap-wysiwyg.js" cache="false"></script>
+<script src="js/wysiwyg/demo.js" cache="false"></script>
+
+<script src="base.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    $.validate();
+
+    $('form').submit(function(){
+        commonAjax({
+           url:'/rbac/version/add',
+            data:$(this).serialize() + "&content=" + $('#editor').html(),
+            dataType:'json',
+            type:'post',
+            success:function(result){
+                if(result.success) {
+                    window.parent.location.reload();
+                } else {
+                    layer.msg(result.message);
+                }
+            }
+        });
+        return false;
+    });
+</script>
+
+</body>
+</html>

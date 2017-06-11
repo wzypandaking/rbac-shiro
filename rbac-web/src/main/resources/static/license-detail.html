@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head th:include="template/top"></head>
+<body>
+<section class="vbox">
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <div class="panel panel-default" id="form-wizard">
+                            <div class="step-content">
+                                <div class="row">
+                                    <div class="col-lg-2 m-b-xs col-lg-push-8">
+                                        <a href="javascript:" id="copyLicense" class="btn btn-sm btn-danger" data-clipboard-target="licenseContent"><i class="fa fa-copy"></i> 复制</a>
+                                        <a href="javascript:" id="downloadLicense" class="btn btn-sm btn-info"><i class="fa fa-download"></i> 下载</a>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-lg-8 center-block  col-lg-push-2">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">license key:</label>
+                                            <div class="col-sm-10">
+                                                <div>
+                                                    <input type="text" id="licenseKey" class="form-control disabled" autocomplete="off" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label></label>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">秘钥:</label>
+                                            <div class="col-sm-10">
+                                                <div>
+                                                    <textarea id="publicKey" class="form-control disabled" autocomplete="off" rows="15" disabled></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="js/zeroclipboard/ZeroClipboard.min.js"></script>
+<textarea id="licenseContent" class="hide form-control disabled" autocomplete="off" rows="15" disabled></textarea>
+<script>
+    var licenseUuid = getQueryString(location, "uuid");
+    if (null === licenseUuid || licenseUuid.length === 0) {
+        window.location.href = '/rbac/version.html';
+    }
+
+    var licenseContent = [];
+    commonAjax({
+        url: '/rbac/license/detail',
+        data: {
+            uuid: licenseUuid
+        },
+        dataType: 'json',
+        success: function (result) {
+            if (result.success) {
+                licenseContent.push(result.data.license);
+                licenseContent.push(result.data.publicKey);
+                $('#licenseContent').val(licenseContent.join("\n"));
+                $('#licenseKey').val(result.data.license);
+                $('#publicKey').val(result.data.publicKey);
+            } else {
+                layer.msg(result.message);
+            }
+        }
+    });
+    $('#downloadLicense').attr('href', '/rbac/license/download?uuid=' + licenseUuid);
+
+    var client = new ZeroClipboard(document.getElementById('copyLicense'));
+    client.on("aftercopy", function () {
+       layer.alert("拷贝成功!", function () {
+          window.close();
+       });
+    });
+</script>
+
+</body>
+</html>

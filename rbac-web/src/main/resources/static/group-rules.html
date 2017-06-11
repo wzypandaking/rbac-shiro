@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head >
+    <meta th:replace="template/top"/>
+    <link rel="stylesheet" href="js/nestable/nestable.css" type="text/css" cache="false" />
+    <style>
+        .ll-handle {
+            display: block;
+            margin: 5px 0;
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ebebeb;
+            background: #fff;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+        }
+        .ll-handle:hover {background: #fff;}
+    </style>
+</head>
+<body>
+<section class="vbox">
+    <header class="bg-dark dk header navbar navbar-fixed-top-xs">
+        <div class="navbar-header aside-md">
+            <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i
+                    class="fa fa-bars"></i> </a> <a href="#" class="navbar-brand" data-toggle="fullscreen"><img
+                src="images/logo.png" class="m-r-sm">权限系统</a> <a class="btn btn-link visible-xs" data-toggle="dropdown"
+                                                                 data-target=".nav-user"> <i class="fa fa-cog"></i> </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right hidden-xs nav-user">
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="profile"></a>
+                <ul class="dropdown-menu animated fadeInRight">
+                    <span class="arrow top"></span>
+                    <li><a href="profile.html">个人信息</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:" class="logout">退出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <aside class="bg-dark lter aside-md hidden-print" id="nav">
+                <section class="vbox">
+                    <section class="w-f scrollable">
+                        <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333">
+                            <!-- nav -->
+                            <nav class="nav-primary hidden-xs" id="nav-container"></nav>
+                            <!-- / nav --> </div>
+                    </section>
+                    <footer class="footer lt hidden-xs b-t b-dark">
+                        <a href="#nav" data-toggle="class:nav-xs" class="pull-right btn btn-sm btn-dark btn-icon"> <i
+                                class="fa fa-angle-left text"></i> <i class="fa fa-angle-right text-active"></i> </a>
+                    </footer>
+                </section>
+            </aside>
+            <!-- /.aside -->
+
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable wrapper">
+                        <h4 class="m-t-none">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <button id="nestable-menu" class="btn btn-xs btn-default active" data-toggle="class:show">
+                                        <i class="fa fa-plus text"></i> <span class="text">展开</span>
+                                        <i class="fa fa-minus text-active"></i> <span class="text-active">收起</span>
+                                    </button> 分配权限
+                                </div>
+                                <div class="col-lg-4 col-lg-push-2">
+                                    <button class="btn btn-sm btn-primary" type="submit" onclick="$('form').submit()">保存</button>
+                                </div>
+                            </div>
+                        </h4>
+                        <div class="row m-b">
+                            <div class="col-lg-12">
+                                <form>
+                                    <input type="hidden" name="uuid" value=""/>
+                                    <div class="dd" id="nestable1"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="menu.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="js/nestable/jquery.nestable.js" cache="false"></script>
+<script>
+    var groupUuid = getQueryString(window.location, 'uuid');
+    if(groupUuid === null) {
+        window.location.href = '/rbac/groups.html';
+    }
+
+    $('input[name="uuid"]').val(groupUuid);
+    var showPage = function(pid, resultMap){
+        var olList = [];
+        olList.push('<ol class="dd-list">');
+        var list = resultMap[pid];
+        for(var k in list) {
+            var item = list[k];
+            olList.push('<li class="dd-item" data-id="' + item.uuid + '">');
+            {
+                olList.push('<div class="ll-handle">');
+                olList.push('<label>');
+                olList.push('<input type="checkbox" name="rules" value="' + item.uuid + '" ' + (item.choose ? "checked": "") + '>&nbsp;' + item.title + '</label>');
+                olList.push('</div>');
+            }
+            if(resultMap[item.id] != undefined) {
+                olList.push(showPage(item.id, resultMap));
+            }
+            olList.push('</li>');
+        }
+        olList.push('</ol>');
+        return olList.join('');
+    };
+
+    commonAjax({
+        url : "/rbac/auth/group/choosedRules",
+        data:{
+            uuid: groupUuid
+        },
+        dataType:'json',
+        async:false,
+        success:function(result) {
+            if(!result.success) {
+                layer.alert(result.message);
+                return;
+            }
+
+            var resultMap = {};
+            for(var k in result.data) {
+                var item = result.data[k];
+                if(resultMap[item.pid] == undefined) {
+                    resultMap[item.pid] = [];
+                }
+                resultMap[item.pid].push(item);
+            }
+            var trList = showPage(0, resultMap, 0);
+            $('#nestable1').html(trList);
+        }
+    });
+
+
+    // activate Nestable for list 1
+    $('#nestable1').nestable({
+        group: 1
+    });
+
+    var $expand = false;
+    $('#nestable-menu').on('click', function(e)
+    {
+        if ($expand) {
+            $expand = false;
+            $('.dd').nestable('expandAll');
+        }else {
+            $expand = true;
+            $('.dd').nestable('collapseAll');
+        }
+    });
+
+    $('#nestable1').find('input:checkbox').click(function () {
+        $(this).parent().parent().next().find('input:checkbox').prop('checked', this.checked);
+    });
+
+    $('form').submit(function () {
+        var postdata = $(this).serialize();
+        layer.open({
+            type : 1,
+            content:'<div style="padding: 20px 80px;">你确定要保存当前配置吗？</div>',
+            btn:['确&nbsp;定', "再考虑一下"],
+            yes : function(){
+                commonAjax({
+                    url : '/rbac/auth/group/rules',
+                    data:postdata,
+                    type:'post',
+                    dataType:'json',
+                    success : function(result) {
+                        if(result.success) {
+                            window.location.reload();
+                        } else {
+                            layer.msg(result.message);
+                        }
+                    }
+                });
+            }
+        });
+        return false;
+    });
+</script>
+</body>
+</html>

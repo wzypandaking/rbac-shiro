@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head th:include="template/top"></head>
+<body>
+<section class="vbox">
+    <header th:include="template/header" class="bg-dark dk header navbar navbar-fixed-top-xs"></header>
+    <section>
+        <section class="hbox stretch">
+            <!-- .aside -->
+            <aside th:include="template/menu" class="bg-dark lter aside-md hidden-print" id="nav"></aside>
+            <!-- /.aside -->
+            <section id="content">
+                <section class="hbox stretch">
+                    <aside>
+                        <section class="vbox">
+                            <section class="scrollable padder">
+                                <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                                    <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
+                                    <li class="active">版本控制</li>
+                                    <li class="active">版本管理</li>
+                                </ul>
+                                <header class="header bg-white b-b clearfix">
+                                    <div class="row m-t-sm">
+                                        <div class="col-sm-8 m-b-xs">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
+                                                <button type="button" class="btn btn-sm btn-default" title="Remove"><i class="fa fa-trash-o"></i></button>
+                                                <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Action</a></li>
+                                                    <li><a href="#">Another action</a></li>
+                                                    <li><a href="#">Something else here</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Separated link</a></li>
+                                                </ul>
+                                            </div>
+                                            <shiro:hasPermission values="RBAC_VC_VERSION_ADD" logical="AND">
+                                            <a href="javascript:" data-target="version-add.html" id="addVersion" class="btn btn-sm btn-default"><i class="fa fa-plus"></i> 添加</a>
+                                            </shiro:hasPermission>
+                                        </div>
+                                        <div class="col-sm-4 m-b-xs">
+                                            <div class="input-group">
+                                                <input type="text" class="input-sm form-control" placeholder="Search">
+                                                <span class="input-group-btn">
+                                                <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+                                <section class="scrollable wrapper w-f">
+                                    <section class="panel panel-default">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped m-b-none">
+                                                <thead>
+                                                <tr>
+                                                    <th>版本名称</th>
+                                                    <th>创建时间</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="data-list">
+                                                    <tr>
+                                                        <td>{{item.title}}</td>
+                                                        <td>{{item.addTime}}</td>
+                                                        <td>
+                                                            <div class="doc-buttons">
+                                                                <shiro:hasPermission values="RBAC_VC_LICENSE_VIEW" logical="AND">
+                                                                <a href="/rbac/version-license.html?uuid={{item.uuid}}" class="btn btn-sm btn-info" title="license管理"><i class="fa fa-file-text text"></i></a>&nbsp;
+                                                                </shiro:hasPermission>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </section>
+                                </section>
+                            </section>
+                            <footer class="footer bg-white b-t">
+                                <div class="row text-center-xs">
+                                    <div class="col-md-6 hidden-sm"></div>
+                                    <div class="col-md-6 col-sm-12 text-right text-center-xs" id="pagination">
+                                        <!--   分页区 -->
+                                    </div>
+                                </div>
+                            </footer>
+                        </section>
+                    </aside>
+                </section>
+                <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+            </section>
+            <aside class="bg-light lter b-l aside-md hide" id="notes">
+                <div class="wrapper">Notification</div>
+            </aside>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="menu.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="jquery.paging.min.js"></script>
+<script src="template-web.js"></script>
+<script>
+    var versionTemplate = loadArtTemplate('data-list');
+
+    var showPage = function(list){
+        var trList = [];
+        for(var k in list) {
+            var render = template.compile(versionTemplate);
+            trList.push(render({
+                item:list[k]
+            }));
+        }
+        $('#data-list').html(trList.join(''));
+    };
+
+    var loadUsers = function(page){
+        commonAjax({
+            url : "/rbac/version/list",
+            data:{
+                page : page
+            },
+            dataType:'json',
+            success:function(result) {
+                showPage(result.list);
+            }
+        });
+    };
+
+    commonAjax({
+        url : "/rbac/version/list",
+        data:{},
+        dataType:'json',
+        success:function(result) {
+            buildPage("#pagination", result, loadUsers);
+        }
+    });
+
+    $('#addVersion').click(function(){
+        layer.open({
+           type:2,
+           content:[$(this).data('target'), 'no'],
+           area:['650px', '500px']
+       });
+    });
+</script>
+</body>
+</html>

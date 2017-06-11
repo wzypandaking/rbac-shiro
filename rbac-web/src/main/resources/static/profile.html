@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head th:include="template/top"></head>
+<body>
+<section class="vbox">
+    <header th:include="template/header" class="bg-dark dk header navbar navbar-fixed-top-xs"></header>
+    <section>
+        <section class="hbox stretch">
+            <!-- .aside -->
+            <aside th:include="template/menu" class="bg-dark lter aside-md hidden-print" id="nav"></aside>
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <header class="header bg-white b-b b-light">
+                        <p>Widgets <small>(colorful)</small></p>
+                    </header>
+                    <section class="scrollable wrapper">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <section class="panel panel-default" id="auth_profile">
+                                    <header class="panel-heading bg-danger lt no-border">
+                                        <div class="clearfix">
+                                            <a href="#" class="pull-left thumb avatar b-3x m-r">
+                                                <img src="{{profile.avatar}}" class="img-circle">
+                                            </a>
+                                            <div class="clear">
+                                                <div class="h3 m-t-xs m-b-xs text-white"> {{profile.username}} <i class="fa fa-circle text-white pull-right text-xs m-t-sm"></i> </div>
+                                                <a href="/rbac/profile_change_password.html"><small class="text-muted">修改密码</small></a>
+                                            </div>
+                                        </div>
+                                    </header>
+                                    <div class="list-group no-radius alt">
+                                        <a class="list-group-item" href="mailto:{{profile.email}}"> <i class="fa fa-envelope icon-muted"></i> {{profile.email}}</a>
+                                        {{if profile.phone}}
+                                        <a class="list-group-item" href="tel:{{profile.phone}}"> <i class="fa fa-phone icon-muted"></i> {{profile.phone}} </a>
+                                        {{else}}
+                                        <a class="list-group-item setting phone" href="#"> <i class="fa fa-phone icon-muted"></i> 设置 </a>
+                                        {{/if}}
+                                    </div>
+                                </section>
+                                <div id="pictureBtn"></div>
+                                <a href="javascript:$('#pictureBtn-button').click()">aa</a>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a> </section>
+                <aside class="bg-light lter b-l aside-md hide" id="notes">
+                    <div class="wrapper">Notification</div>
+                </aside>
+        </section>
+    </section>
+</section>
+
+
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="js/charts/easypiechart/jquery.easy-pie-chart.js" cache="false"></script>
+<script src="js/charts/sparkline/jquery.sparkline.min.js" cache="false"></script>
+
+<script src="uploadify/jquery.uploadify.min.js"></script>
+
+<script src="base.js"></script>
+<script src="menu.js"></script>
+<script src="template-web.js"></script>
+<script>
+    $(document).on('click', '.setting', function () {
+        if($(this).hasClass("phone")) {
+            layer.open("setting")
+        }
+    });
+    var profileTemplate = loadArtTemplate("auth_profile");
+    commonAjax({
+        url:'/rbac/admin/profile',
+        async:false,
+        success:function (result) {
+            var render = template.compile(profileTemplate);
+            var html = render({
+                profile:result.data
+            });
+            $('#auth_profile').html(html);
+        }
+    });
+    $('#pictureBtn').uploadify({
+        swf: 'uploadify/uploadify.swf',
+        uploader : 'admin/profile/avatar',
+        buttonText:'换',
+        multi:false,
+        buttonClass:'',
+        onUploadError:function (file, errorCode, errorMsg, errorString) {
+            console.log(file, errorCode, errorMsg, errorString);
+        },
+        onUploadSuccess:function (file, data, response) {
+            console.log(file, data, response);
+        }
+    });
+</script>
+</body>
+</html>

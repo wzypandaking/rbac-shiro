@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://rbac.rbacshiro.com"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://rbac.rbacshiro.com">
+    <xsd:simpleType name="Permissions">
+        <xsd:restriction xml:base="xsd:token">
+            <xsd:enumeration value="RBAC"/>
+			<xsd:enumeration value="RBAC_SYSTEM"/>
+			<xsd:enumeration value="RBAC_SYSTEM_MENU"/>
+			<xsd:enumeration value="RBAC_SYSTEM_MENU_ADD"/>
+			<xsd:enumeration value="RBAC_SYSTEM_MENU_EDIT"/>
+			<xsd:enumeration value="RBAC_SYSTEM_MENU_DELETE"/>
+			<xsd:enumeration value="RBAC_VC"/>
+			<xsd:enumeration value="RBAC_VC_VERSION"/>
+			<xsd:enumeration value="RBAC_VC_LICENSE"/>
+			<xsd:enumeration value="RBAC_VC_VERSION_ADD"/>
+			<xsd:enumeration value="RBAC_VC_VERSION_LICENSE"/>
+			<xsd:enumeration value="RBAC_VC_VERSION_LICENSE_ADD"/>
+			<xsd:enumeration value="RBAC_VC_LICENSE_VIEW"/>
+			<xsd:enumeration value="RBAC_AUTHORITY"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_USER"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_USER_ADD"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_USER_LOGIN"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_GROUP"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_GROUP_ADD"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_GROUP_EDIT"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_GROUP_DELETE"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_GROUP_RULES"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_GROUP_USERS"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_RULE"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_RULE_ADD"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_RULE_EDIT"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_RULE_DELETE"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_DEPARTMENT"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_DEPARTMENT_ADD"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_DEPARTMENT_EDIT"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_DEPARTMENT_DELETE"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_DEPARTMENT_USERS"/>
+			<xsd:enumeration value="RBAC_VC_LICENSE_STATUS"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="hasPermission">
+        <xsd:complexType>
+            <xsd:attribute name="values" type="Permissions" use="required"/>
+            <xsd:attribute name="logical" use="required">
+                <xsd:simpleType>
+                    <xsd:restriction>
+                        <xsd:enumeration value="AND" />
+                        <xsd:enumeration value="OR" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

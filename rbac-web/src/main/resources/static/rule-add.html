@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head >
+    <meta th:replace="template/top" />
+    <link rel="stylesheet" href="js/fuelux/fuelux.css" type="text/css" cache="false">
+</head>
+<body>
+<section class="vbox">
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <div class="panel panel-default" id="form-wizard">
+                            <div class="step-content">
+                                <form>
+                                    <div>
+                                        <p>权限名:</p>
+                                        <input type="text" name="title" autocomplete="off" class="form-control" placeholder="请输入权限名称" data-validation="required" data-validation-error-msg="权限名称不能为空">
+                                    </div>
+                                    <div>
+                                        <p>权限值:</p>
+                                        <small id="parentName"></small>
+                                        <input type="text" name="name" autocomplete="off" class="form-control" placeholder="请输入权限名称" data-validation="alphanumeric" data-validation-error-msg="格式不正确">
+                                        <small>e.g menu、edit英文单词，只能是字母</small>
+                                    </div>
+                                    <input type="hidden" name="pUuid" value="">
+                                    <br />
+                                    <button type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    var parentUuid = parent.document.getElementById("uuid").value;
+    $('#parentName').html(parent.document.getElementById("name").value);
+    $('input[name="pUuid"]').val(parentUuid);
+    $.validate();
+    $('form').submit(function(){
+        commonAjax({
+            url :'/rbac/rules/add',
+            data:$(this).serialize(),
+            dataType:'json',
+            type:'post',
+            success:function(result){
+                if(result.success) {
+                    parent.location.reload();
+                } else {
+                    layer.msg(result.message);
+                }
+            }
+        });
+        return false;
+    });
+</script>
+
+</body>
+</html>

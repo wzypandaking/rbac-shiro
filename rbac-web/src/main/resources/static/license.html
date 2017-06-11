@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head>
+    <meta th:replace="template/top"/>
+    <link rel="stylesheet" href="js/select2/select2.css" type="text/css" cache="false" />
+    <link rel="stylesheet" href="js/select2/theme.css"  type="text/css" cache="false" />
+</head>
+<body>
+<section class="vbox">
+    <header th:include="template/header" class="bg-dark dk header navbar navbar-fixed-top-xs"></header>
+    <section>
+        <section class="hbox stretch">
+            <!-- .aside -->
+            <aside th:include="template/menu" class="bg-dark lter aside-md hidden-print" id="nav"></aside>
+            <!-- /.aside -->
+            <section id="content">
+                <section class="hbox stretch">
+                    <aside>
+                        <section class="vbox">
+                            <section class="scrollable padder">
+                                <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                                    <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
+                                    <li class="active">license列表</li>
+                                </ul>
+                                <section class="scrollable padder">
+                                    <header class="header bg-white b-b clearfix">
+                                        <form id="searchForm">
+                                        <div class="row m-t-sm">
+                                            <div class="col-sm-8 m-b-xs">
+                                                <div class="col-lg-10">
+                                                    <select id="versionUuid" name="versionUuid" class="select2-offscreen" style="width: 100%" data-placeholder="版本筛选"></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 m-b-xs">
+                                                <div class="input-group">
+                                                    <input type="text" class="input-sm form-control" placeholder="Search">
+                                                    <span class="input-group-btn">
+                                                    <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </header>
+                                    <section class="scrollable wrapper w-f">
+                                        <section class="panel panel-default">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped m-b-none">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>license key</th>
+                                                        <th>状态</th>
+                                                        <th>过期时间</th>
+                                                        <th>创建时间</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="data-list">
+                                                        <tr>
+                                                            <td>{{item.license}}</td>
+                                                            <td>
+                                                                {{if item.status == 2}}
+                                                                已过期;
+                                                                {{else}}
+                                                                <div class="m-b-sm">
+                                                                    <shiro:hasPermission values="RBAC_VC_LICENSE_STATUS" logical="AND">
+                                                                    <div class="btn-group toogle-status" data-toggle="buttons" data-id="{{item.uuid}}">
+                                                                        {{if item.status == 1}}
+                                                                        <label class="btn btn-sm btn-info">
+                                                                            <input type="radio" name="options" value="0" id="option1">
+                                                                            <i class="fa fa-check text-active"></i> 禁用 </label>
+                                                                        <label class="btn btn-sm btn-success active">
+                                                                            <input type="radio" name="options" value="1" id="option2">
+                                                                            <i class="fa fa-check text-active"></i> 解禁 </label>
+                                                                        {{else}}
+                                                                        <label class="btn btn-sm btn-info active">
+                                                                            <input type="radio" name="options" value="0" id="option1">
+                                                                            <i class="fa fa-check text-active"></i> 禁用 </label>
+                                                                        <label class="btn btn-sm btn-success">
+                                                                            <input type="radio" name="options" value="1" id="option2">
+                                                                            <i class="fa fa-check text-active"></i> 解禁 </label>
+                                                                        {{/if}}
+                                                                    </div>
+                                                                    </shiro:hasPermission>
+                                                                </div>
+                                                                {{/if}}
+                                                            </td>
+                                                            <td>{{item.expireTime}}</td>
+                                                            <td>{{item.addTime}}</td>
+                                                            <td>
+                                                                <div class="doc-buttons">
+                                                                    <shiro:hasPermission values="RBAC_VC_LICENSE_VIEW" logical="AND">
+                                                                    <a href="/rbac/license-detail.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="查看license"><i class="fa fa-eye text"></i></a>&nbsp;
+                                                                    </shiro:hasPermission>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </section>
+                                    </section>
+                                </section>
+                            </section>
+                            <footer class="footer bg-white b-t">
+                                <div class="row text-center-xs">
+                                    <div class="col-md-6 hidden-sm"></div>
+                                    <div class="col-md-6 col-sm-12 text-right text-center-xs" id="pagination">
+                                        <!--   分页区 -->
+                                    </div>
+                                </div>
+                            </footer>
+                        </section>
+                    </aside>
+                </section>
+                <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a> </section>
+            <aside class="bg-light lter b-l aside-md hide" id="notes">
+                <div class="wrapper">Notification</div>
+            </aside>
+        </section>
+    </section>
+</section>
+<input type="hidden" id="uuid" value="">
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="menu.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="jquery.paging.min.js"></script>
+<script src="js/select2/select2.min.js" cache="false"></script>
+<script src="template-web.js"></script>
+<script>
+    var licenseTemplate = loadArtTemplate('data-list');
+    commonAjax({
+        url : '/rbac/version/listAll',
+        dataType:'json',
+        success:function (result) {
+            if(!result.success) {
+                return;
+            }
+            var optList = ['<option value="">请选择版本</option>'];
+            for (var key in result.data) {
+                var item = result.data[key];
+                optList.push('<option value="' + item.uuid + '">' + item.title + '</option>')
+            }
+            $('#versionUuid').html(optList.join('')).select2();
+        }
+    });
+    $('#searchForm').submit(function () {
+        initPagePlugin();
+        return false;
+    });
+    $('#versionUuid').change(function(){
+        $('#searchForm').submit();
+    });
+
+    var showPage = function(list){
+        var trList = [];
+        for(var k in list) {
+            var render = template.compile(licenseTemplate);
+            trList.push(render({
+                item:list[k]
+            }));
+        }
+        $('#data-list').html(trList.join(''));
+    };
+
+    var loadLicense = function(page){
+        commonAjax({
+            url : "/rbac/license/list",
+            data: $('#searchForm').serialize() + "&page=" + page,
+            dataType:'json',
+            success:function(result) {
+                showPage(result.list);
+            }
+        });
+    };
+
+    function initPagePlugin() {
+        commonAjax({
+            url : "/rbac/license/list",
+            data:$('#searchForm').serialize(),
+            dataType:'json',
+            success:function(result) {
+                buildPage("#pagination", result, loadLicense);
+            }
+        });
+    }
+    initPagePlugin();
+
+    $('#addLicense').click(function(){
+        layer.open({
+            type:2,
+            content:[$(this).data('target'), 'no'],
+            area:['450px', '300px']
+        });
+    });
+
+    $(document).on('click', '.toogle-status', function(){
+        var uuid = $(this).data('id');
+        var status = $(this).find('input:checked').val();
+        console.log($(this).find('input:checked').val());
+        commonAjax({
+            url : '/rbac/license/toggleStatus',
+            data : {
+                uuid : uuid,
+                status : status
+            },
+            type : 'post',
+            dataType:'json',
+            success:function(result){
+
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

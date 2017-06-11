@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head th:include="template/top"></head>
+<body>
+<section class="vbox">
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <div class="panel panel-default" id="form-wizard">
+                            <div class="step-content">
+                                <form>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">有效期(月）:</label>
+                                        <div class="col-sm-10">
+                                            <div>
+                                                <input type="text" name="expireTime" class="form-control" placeholder="默认1个月" autocomplete="off" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">生成个数:</label>
+                                        <div class="col-sm-10">
+                                            <div>
+                                            <input type="text" name="licenseNum" class="form-control" placeholder="默认1个license" autocomplete="off" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-10">
+                                            <input type="hidden" name="versionUuid" value="" />
+                                            <button type="submit" class="btn btn-sm btn-primary">确认</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    var versionUUid = parent.document.getElementById("uuid").value;
+    $('input[name="versionUuid"]').val(versionUUid);
+
+    $.validate();
+
+    $('form').submit(function(){
+        commonAjax({
+           url:'/rbac/license/create',
+            data: $(this).serialize(),
+            dataType:'json',
+            type:'post',
+            success:function(result){
+                if(result.success) {
+                    window.parent.location.reload();
+                } else {
+                    layer.msg(result.message);
+                }
+            }
+        });
+        return false;
+    });
+</script>
+
+</body>
+</html>

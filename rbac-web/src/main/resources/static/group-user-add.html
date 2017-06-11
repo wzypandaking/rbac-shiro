@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head >
+    <meta th:replace="template/top"/>
+    <link rel="stylesheet" href="js/select2/select2.css" type="text/css" cache="false" />
+    <link rel="stylesheet" href="js/select2/theme.css" type="text/css" cache="false" />
+</head>
+<body>
+<section class="vbox">
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <div class="panel panel-default" id="form-wizard">
+                            <div class="step-content">
+                                <form>
+                                    <div class="form-group">
+                                        <p>选择用户:</p>
+                                        <select name="userUuid" id="select2-option" style="width: 100%" multiple="multiple"></select>
+                                    </div>
+                                    <input type="hidden" name="groupUuid" value="">
+                                    <button class="btn btn-sm btn-primary">确认</button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<!-- select2 -->
+<script src="js/select2/select2.min.js" cache="false"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    var groupUUid = parent.document.getElementById("uuid").value;
+    $('input[name="groupUuid"]').val(groupUUid);
+    commonAjax({
+        url:'/rbac/auth/group/users',
+        data:{
+            uuid:groupUUid
+        },
+        dataType:'json',
+        success:function(result){
+            var optList = [];
+            var list = result.data;
+            for(var  k in  list) {
+                var item = list[k];
+                optList.push('<option value="' + item.uuid + '" ' + (item.choose ? 'selected="selected"' : '') + '>' + item.username + '</option>')
+            }
+            $('#select2-option').html(optList.join('')).select2();
+        }
+    });
+
+    $.validate();
+    $('form').submit(function(){
+        commonAjax({
+            url: '/rbac/auth/group/user/add',
+            data:$(this).serialize(),
+            type:'post',
+            dataType:'json',
+            success:function(result) {
+                if(result.success) {
+                    parent.location.reload();
+                } else {
+                    layer.msg(result.message);
+                }
+            }
+        });
+        return false;
+    });
+</script>
+
+</body>
+</html>

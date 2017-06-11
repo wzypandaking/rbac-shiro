@@ -1,0 +1,67 @@
+.panel .fc-header {
+  position: relative;
+  height: 40px;
+}
+.panel .fc-header .fc-button {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  height: 40px;
+  line-height: 18px;
+  padding: 10px;
+}
+.panel .fc-header .fc-button.fc-state-active {
+  background: #fff;
+}
+.panel .fc-header .fc-header-title h2 {
+  font-size: 15px;
+  line-height: 40px;
+  margin: 0;
+}
+.panel .fc-header td {
+  position: absolute;
+  white-space: nowrap;
+}
+.panel .fc-header .fc-header-left {
+  width: 100%;
+  z-index: 2;
+}
+.panel .fc-header .fc-button-prev {
+  float: left;
+}
+.panel .fc-header .fc-button-next {
+  float: right;
+}
+.panel .fc-header .fc-header-center {
+  z-index: 1;
+  width: 100%;
+  padding: 0 40px;
+}
+.panel .fc-header .fc-header-right {
+  position: relative;
+  top: -39px;
+  right: 0;
+}
+.panel .fc-header .fc-state-default.fc-corner-right {
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 0;
+}
+.panel .fc-header .fc-state-disabled {
+  opacity: 0.35;
+  filter: alpha(opacity=35);
+}
+.panel .fc-content {
+  margin: -1px;
+}
+.fc-content .fc-widget-header,
+.fc-content .fc-widget-content {
+  border-color: #e8e8e8;
+}
+.fc-content .fc-event {
+  border: none;
+  padding: 4px 6px;
+}
+.fc-event {
+  background-color: #4cc0c1;
+}

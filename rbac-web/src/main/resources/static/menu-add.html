@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="app"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://rbac.rbacshiro.com"
+>
+<head >
+    <meta th:replace="template/top"/>
+    <link rel="stylesheet" href="js/select2/select2.css" type="text/css" cache="false" />
+    <link rel="stylesheet" href="js/select2/theme.css" type="text/css" cache="false" />
+</head>
+<body>
+<section class="vbox">
+    <section>
+        <section class="hbox stretch"> <!-- .aside -->
+            <!-- /.aside -->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <div class="panel panel-default" id="form-wizard">
+                            <div class="step-content">
+                                <form>
+                                    <div>
+                                        <p>菜单名称:</p>
+                                        <input type="text" name="name" autocomplete="off" class="form-control" placeholder="请输入菜单名称" data-validation="required" data-validation-error-msg="菜单名称不能为空">
+                                    </div>
+                                    <div>
+                                        <p>URL:</p>
+                                        <input type="text" name="mca" autocomplete="off" value="javascript:" class="form-control" placeholder="输入菜单访问的URL">
+                                    </div>
+                                    <div>
+                                        <p>菜单图标:</p>
+                                        <input type="text" name="ico" autocomplete="off" class="form-control">
+                                        <small>e.g fa-cog</small>
+                                    </div>
+                                    <div>
+                                        <p>排序:</p>
+                                        <input type="text" name="orderNumber" value="1000" autocomplete="off" class="form-control" placeholder="排序" data-validation="required" data-validation="number" data-validation-error-msg="格式不正确">
+                                    </div>
+                                    <div>
+                                        <p>菜单权限:</p>
+                                        <select name="ruleUuid" id="select2-option" style="width: 100%" data-validation="required" data-validation-error-msg="请选择菜单权限"></select>
+                                    </div>
+                                    <input type="hidden" name="pUuid" value="">
+                                    <br />
+                                    <button type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
+<script src="base.js"></script>
+<script src="menus.js"></script>
+<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<!-- select2 -->
+<script src="js/select2/select2.min.js" cache="false"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    $('input[name="pUuid"]').val(parent.document.getElementById("uuid").value);
+    loadMenuRules('');
+    $.validate();
+    $('form').submit(function(){
+        commonAjax({
+            url :'/rbac/menu/add',
+            data:$(this).serialize(),
+            dataType:'json',
+            type:'post',
+            success:function(result){
+                if(result.success) {
+                    parent.location.reload();
+                } else {
+                    layer.msg(result.message);
+                }
+            }
+        });
+        return false;
+    });
+
+</script>
+
+</body>
+</html>
