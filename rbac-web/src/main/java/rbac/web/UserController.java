@@ -1,6 +1,5 @@
 package rbac.web;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +53,12 @@ public class UserController {
         PagingResult<AdminUsers> result = adminUsersService.search(param, page);
         List<AdminUsersVO> users = BeanUtil.copy(result.getList(), new TypeReference<List<AdminUsersVO>>(){}.getType());
         return PagingResult.wrapResult(users, result.getTotal(), result.getPage(), result.getSize());
+    }
+
+    @RequestMapping("avatar")
+    public byte[] userAvatar(String uuid) {
+        AdminUsers adminUsers = adminUsersDao.findByUuid(uuid);
+        return adminUsersService.getUserAvatar(adminUsers);
     }
 
     @RequiresPermissions({

@@ -7,7 +7,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -121,21 +120,7 @@ public class AdminController {
     public byte[] loadAvatar(HttpServletRequest request) {
         Long id = (Long) request.getSession().getAttribute("id");
         AdminUsers adminUsers = adminUsersDao.findById(id);
-        try {
-            InputStream stream;
-            File file = new File(adminUsers.getAvatar());
-            if (!file.isFile() || !file.exists()) {
-                ClassPathResource resource = new ClassPathResource("static/images/avatar.jpg");
-                stream = resource.getInputStream();
-            } else {
-                stream = new FileInputStream(file);
-            }
-            byte[] data = new byte[stream.available()];
-            stream.read(data);
-            return data;
-        } catch (Exception e) {
-            throw new RuntimeException("文件头像没有找到");
-        }
+        return adminUsersService.getUserAvatar(adminUsers);
     }
 
     @RequestMapping(value = "profile/avatar", method = RequestMethod.POST)

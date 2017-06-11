@@ -57,10 +57,7 @@
                                             <table class="table table-striped m-b-none">
                                                 <thead>
                                                 <tr>
-                                                    <th></th>
                                                     <th>账号名称</th>
-                                                    <th>邮箱</th>
-                                                    <th>电话</th>
                                                     <th>注册时间</th>
                                                     <th>登录时间<a href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="最后一次登录的时间">?</a></th>
                                                     <th>IP<a href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="最后一次登录的IP">?</a></th>
@@ -72,17 +69,22 @@
                                                 </thead>
                                                 <tbody id="data-list">
                                                     <tr>
-                                                        <td><span class="thumb-sm avatar pull-left"><img src={{item.avatar}}></span></td>
-                                                        <td>{{item.username}}</td>
-                                                        <td>{{item.email}}</td>
-                                                        <td>{{item.phone}}</td>
+                                                        <td>
+                                                            <ul class="nav navbar-nav navbar-left hidden-xs nav-user">
+                                                                <li>
+                                                                    <a href="/rbac/user_detail.html?uuid={{item.uuid}}" class="dropdown-toggle" >
+                                                                    <span class="thumb-sm avatar pull-left"><img src="/rbac/user/avatar?uuid={{item.uuid}}" style="width: 28px;height: 28px"></span>{{item.username}}
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
                                                         <td>{{item.registerTime}}</td>
                                                         <td>{{item.lastLoginTime}}</td>
                                                         <td>{{item.lastLoginIp}}</td>
                                                         <shiro:hasPermission values="RBAC_AUTHORITY_USER_LOGIN" logical="AND">
                                                         <td>
                                                             <div class="m-b-sm">
-                                                                <div class="btn-group toogle-status" data-toggle="buttons" data-id={{item.uuid}}>
+                                                                <div class="btn-group toogle-status" data-toggle="buttons" data-id="{{item.uuid}}">
                                                                     {{if item.status == 1}}
                                                                     <label class="btn btn-sm btn-info">
                                                                         <input type="radio" name="options" value="0" id="option1">

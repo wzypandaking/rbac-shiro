@@ -1,8 +1,10 @@
 package rbac.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,6 +24,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -41,6 +46,25 @@ public class AdminUsersService {
     private AdminAuthGroupService adminAuthGroupService;
     @Autowired
     private AdminAuthRuleService adminAuthRuleService;
+
+    public byte[] getUserAvatar(AdminUsers user) {
+        try {
+            InputStream stream;
+
+            if (StringUtils.isEmpty(user.getAvatar())) {
+                ClassPathResource resource = new ClassPathResource("static/images/avatar.jpg");
+                stream = resource.getInputStream();
+            } else {
+                File file = new File(user.getAvatar());
+                stream = new FileInputStream(file);
+            }
+            byte[] data = new byte[stream.available()];
+            stream.read(data);
+            return data;
+        } catch (Exception e) {
+            throw new RuntimeException("文件头像没有找到");
+        }
+    }
 
     /**
      * 构建密码加密规则
