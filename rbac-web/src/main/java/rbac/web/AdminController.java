@@ -94,24 +94,39 @@ public class AdminController {
 
     @RequestMapping("profile")
     @ResponseBody
-    public Result<ProfileManageVO> profile(HttpServletRequest request) {
-        AdminUsers adminUsers = adminUsersDao.findById((Long) request.getSession().getAttribute("id"));
+    public Result<ProfileManageVO> profile(String uuid, HttpServletRequest request) {
+        AdminUsers adminUsers;
+        if (StringUtils.isEmpty(uuid)) {
+            adminUsers = adminUsersDao.findById((Long) request.getSession().getAttribute("id"));
+        } else {
+            adminUsers = adminUsersDao.findByUuid(uuid);
+        }
         return Result.wrapResult(BeanUtil.copy(adminUsers, ProfileManageVO.class));
     }
 
     @RequestMapping(value = "change_password", method = RequestMethod.POST)
     @ResponseBody
     public Result changePassword(UserChangePassword password, HttpServletRequest request) {
-        AdminUsers adminUsers = adminUsersDao.findById((Long) request.getSession().getAttribute("id"));
-        if (adminUsers == null) {
-            return Result.wrapResult(AdminUsersLang.NOT_FOUND);
-        }
-        AdminUsers user = adminUsersService.checkUserAndPassword(adminUsers.getUsername(), password.getPassword().get(0));
-        if (user == null) {
-            return Result.wrapResult(AdminUsersLang.PASSWORD_ERROR);
-        }
-        if (StringUtils.isEmpty(password.getPassword().get(1)) || ! password.getPassword().get(1).equals(password.getPassword().get(2))) {
-            return Result.wrapResult(AdminUsersLang.PASSWORD_CHECK_FAILED);
+        AdminUsers user;
+        if (StringUtils.isEmpty(password.getUuid())) {
+            AdminUsers adminUsers = adminUsersDao.findById((Long) request.getSession().getAttribute("id"));
+            user = adminUsersService.checkUserAndPassword(adminUsers.getUsername(), password.getPassword().get(0));
+            if (user == null) {
+                return Result.wrapResult(AdminUsersLang.NOT_FOUND);
+            }
+            if (StringUtils.isEmpty(password.getPassword().get(1))
+                    || ! password.getPassword().get(1).equals(password.getPassword().get(2))) {
+                return Result.wrapResult(AdminUsersLang.PASSWORD_CHECK_FAILED);
+            }
+        } else {
+            user = adminUsersDao.findByUuid(password.getUuid());
+            if (user == null) {
+                return Result.wrapResult(AdminUsersLang.NOT_FOUND);
+            }
+            if (StringUtils.isEmpty(password.getPassword().get(0))
+                    || ! password.getPassword().get(1).equals(password.getPassword().get(1))) {
+                return Result.wrapResult(AdminUsersLang.PASSWORD_CHECK_FAILED);
+            }
         }
         return adminUsersService.changePassword(user, password.getPassword().get(1));
     }

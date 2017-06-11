@@ -1,9 +1,6 @@
 /**
  * Created by pandaking on 2017/5/15.
  */
-var targetConfig = {
-        "/rbac/version-license.html" : '/rbac/license.html'
-};
 var commonAjax=function(opts) {
     var callback = opts.success;
     opts.success = function(result){

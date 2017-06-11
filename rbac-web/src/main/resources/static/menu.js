@@ -2,6 +2,11 @@
  * Created by pandaking on 2017/5/24.
  */
 +(function(){
+    var targetConfig = {
+        "/rbac/version-license.html" : '/rbac/license.html',
+        "/rbac/user_detail.html" : '/rbac/users.html',
+        "/rbac/change_password.html" : '/rbac/users.html'
+    };
     var showPage = function(pid, resultMap){
         var trList = [];
         var list = resultMap[pid];

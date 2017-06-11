@@ -12,5 +12,7 @@ import java.util.List;
 @Getter
 public class UserChangePassword {
 
+    private String uuid;
+
     private List<String> password;
 }
