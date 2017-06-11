@@ -8,6 +8,7 @@ import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import rbac.dao.repository.BaseEntity;
@@ -28,11 +29,11 @@ import java.util.Set;
 public class JpaDaoAspect {
 
     private final String filterName = "DepartmentFilter";
+    private AntPathMatcher matcher = new AntPathMatcher();
 
     private List<String> excludeURI = ImmutableList.of(
-            "admin/login",
-            "admin/user",
-            "menu/show"
+            "/rbac/admin/**",
+            "/rbac/menu/show"
     ).asList();
 
     @Autowired
@@ -40,6 +41,9 @@ public class JpaDaoAspect {
 
     @Around("execution(* rbac.dao.*Dao.save(..))")
     public Object save(ProceedingJoinPoint pjp) throws Throwable {
+        if(AdministratorUtil.isSuper()) {
+            return pjp.proceed();
+        }
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Long id = (Long)request.getSession().getAttribute("id");
         Object object = pjp.getArgs()[0];
@@ -71,8 +75,9 @@ public class JpaDaoAspect {
         }
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String requestURI = request.getRequestURI();
         for (String item : excludeURI) {
-            if (request.getRequestURI().contains(item)) {
+            if(matcher.match(item, requestURI)) {
                 return pjp.proceed();
             }
         }
