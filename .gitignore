@@ -4,3 +4,4 @@ target
 upload/*
 *.iml
 .DS_Store
+*.log
