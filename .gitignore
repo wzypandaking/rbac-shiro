@@ -2,3 +2,5 @@
 .idea
 target
 upload/*
+*.iml
+.DS_Store
