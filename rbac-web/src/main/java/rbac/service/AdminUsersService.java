@@ -50,13 +50,15 @@ public class AdminUsersService {
     public byte[] getUserAvatar(AdminUsers user) {
         try {
             InputStream stream;
-
-            if (StringUtils.isEmpty(user.getAvatar())) {
+            File file = null;
+            if (StringUtils.isNotEmpty(user.getAvatar())) {
+                 file = new File(user.getAvatar());
+            }
+            if (file != null && file.isFile() && file.exists()) {
+                stream = new FileInputStream(file);
+            } else {
                 ClassPathResource resource = new ClassPathResource("static/images/avatar.jpg");
                 stream = resource.getInputStream();
-            } else {
-                File file = new File(user.getAvatar());
-                stream = new FileInputStream(file);
             }
             byte[] data = new byte[stream.available()];
             stream.read(data);
