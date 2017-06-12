@@ -39,18 +39,18 @@
                                             </div>
                                         </header>
                                         <div class="list-group no-radius alt">
-                                            <a class="list-group-item" href="mailto:{{profile.email}}"> <i class="fa fa-envelope icon-muted"></i> {{profile.email}}</a>
+                                            <a class="list-group-item" href="mailto:{{profile.email}}"> 邮箱 {{profile.email}}</a>
                                             {{if profile.phone}}
-                                            <a class="list-group-item" href="tel:{{profile.phone}}"> <i class="fa fa-phone icon-muted"></i> {{profile.phone}} </a>
+                                            <a class="list-group-item" href="tel:{{profile.phone}}"> 电话： {{profile.phone}} </a>
                                             {{/if}}
                                             {{if profile.registerTime}}
-                                            <a class="list-group-item" href="tel:{{profile.phone}}"> <i class="fa fa-phone icon-muted"></i> {{profile.registerTime}} </a>
+                                            <a class="list-group-item"> 注册时间： {{profile.registerTime}} </a>
                                             {{/if}}
                                             {{if profile.lastLoginIp}}
-                                            <a class="list-group-item" href="tel:{{profile.phone}}"> <i class="fa fa-phone icon-muted"></i> {{profile.lastLoginIp}} </a>
+                                            <a class="list-group-item"> 登录IP： {{profile.lastLoginIp}} </a>
                                             {{/if}}
                                             {{if profile.lastLoginTime}}
-                                            <a class="list-group-item" href="tel:{{profile.phone}}"> <i class="fa fa-phone icon-muted"></i> {{profile.lastLoginTime}} </a>
+                                            <a class="list-group-item"> 登录时间： {{profile.lastLoginTime}} </a>
                                             {{/if}}
                                         </div>
                                     </section>
@@ -59,10 +59,6 @@
                         </section>
                 </section>
                 </section>
-                <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a> </section>
-                <aside class="bg-light lter b-l aside-md hide" id="notes">
-                    <div class="wrapper">Notification</div>
-                </aside>
         </section>
     </section>
 </section>
