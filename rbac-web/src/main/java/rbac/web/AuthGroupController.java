@@ -174,6 +174,8 @@ public class AuthGroupController {
         AdminAuthGroup group = adminAuthGroupDao.findByUuid(uuid);
         if (group == null) {
             return Result.wrapResult(AdminAuthGroupLang.GROUP_NOT_EXISTS);
+        } else if (group.getType() == 1L) {
+            return Result.wrapResult(AdminAuthGroupLang.GROUP_NOT_EXISTS);
         }
         return adminAuthGroupService.delete(group);
     }

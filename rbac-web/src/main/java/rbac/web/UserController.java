@@ -97,6 +97,8 @@ public class UserController {
         AdminUsers adminUsers = adminUsersDao.findByUuid(param.getUuid());
         if (adminUsers == null) {
             return Result.wrapResult(AdminUsersLang.NOT_FOUND);
+        } else if (adminUsers.getId() == 1) {
+            return Result.wrapResult(AdminUsersLang.NOT_FOUND);
         }
         adminUsers.setStatus(param.getStatus());
         adminUsersDao.save(adminUsers);

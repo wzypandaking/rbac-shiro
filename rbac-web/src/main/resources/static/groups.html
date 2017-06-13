@@ -72,7 +72,9 @@
                                                                 <button data-target="/rbac/group-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_EDIT" logical="AND">
+                                                                {{if item.type != 1}}
                                                                 <button data-target="/rbac/auth/group/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                                {{/if}}
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_RULES" logical="AND">
                                                                 <a href="/rbac/group-rules.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="分配权限"><i class="fa fa-lock text"></i></a>&nbsp;

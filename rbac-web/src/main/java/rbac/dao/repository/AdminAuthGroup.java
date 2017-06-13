@@ -2,10 +2,10 @@ package rbac.dao.repository;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import rbac.utils.RandomUtil;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -31,4 +31,6 @@ public class AdminAuthGroup extends BaseEntity implements Serializable {
     @Column(name = "rules")
     private String rules;
 
+    @Column(name = "type")
+    private Long type = 2L;
 }

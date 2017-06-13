@@ -16,4 +16,6 @@ public class AdminAuthGroupVO {
     private String uuid;
 
     private String title;
+
+    private Integer type;
 }
