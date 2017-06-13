@@ -21,4 +21,6 @@ public interface AdminAuthGroupDao extends PagingAndSortingRepository<AdminAuthG
     AdminAuthGroup findByTitle(String title);
 
     List<AdminAuthGroup> findByIdIn(List<Long> ids);
+
+    AdminAuthGroup findById(Long id);
 }

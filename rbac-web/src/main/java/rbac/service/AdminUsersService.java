@@ -9,8 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import rbac.dao.AdminAuthGroupDao;
 import rbac.dao.AdminUsersDao;
 import rbac.dao.repository.AdminAuthGroup;
+import rbac.dao.repository.AdminAuthGroupAccess;
 import rbac.dao.repository.AdminAuthRule;
 import rbac.dao.repository.AdminUsers;
 import rbac.utils.*;
@@ -44,6 +47,8 @@ public class AdminUsersService {
     private AdminUsersDao adminUsersDao;
     @Autowired
     private AdminAuthGroupService adminAuthGroupService;
+    @Autowired
+    private AdminAuthGroupAccessService adminAuthGroupAccessService;
     @Autowired
     private AdminAuthRuleService adminAuthRuleService;
 
@@ -111,6 +116,7 @@ public class AdminUsersService {
      * @param user
      * @return
      */
+    @Transactional
     public Long addUser(AdminUsers user) {
         String salt = RandomUtil.getCode(4, 3);
         String password = buildPassword(user.getPassword(), salt);
@@ -118,6 +124,13 @@ public class AdminUsersService {
         user.setPassword(password);
         user.setRegisterTime(new Date());
         adminUsersDao.save(user);
+        Result result = adminAuthGroupAccessService.addUsers2Group(user);
+        if (!result.isSuccess()) {
+            String sql = "INSERT INTO `admin_auth_group` (`id`, `uuid`, `title`, `status`, `type`, `create_time`, `creator`, `edit_time`, `editor`, `rules`)\n" +
+                    "VALUES\n" +
+                    "\t(2, '3f47d786a65c4df59b3f5dfe79d72262', '普通用户组', 1, 1, '2017-06-13 16:50:28', 1, '2017-06-13 16:50:28', 1, '35,36,37');\n";
+            throw new RuntimeException(result.getMessage() + "。请执行SQL:" + sql);
+        }
         return user.getId();
     }
 

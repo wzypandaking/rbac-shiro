@@ -19,6 +19,9 @@ import java.util.Date;
 @Getter
 @MappedSuperclass
 @FilterDefs({
+        /**
+         * @See rbac.web.aop.JpaDaoAspect
+         */
         @FilterDef(name = "DepartmentFilter", defaultCondition = "creator in (:creator)",parameters = @ParamDef(name = "creator", type = "long"))
 })
 @Filter(name = "DepartmentFilter")

@@ -41,9 +41,6 @@ public class JpaDaoAspect {
 
     @Around("execution(* rbac.dao.*Dao.save(..))")
     public Object save(ProceedingJoinPoint pjp) throws Throwable {
-        if(AdministratorUtil.isSuper()) {
-            return pjp.proceed();
-        }
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Long id = (Long)request.getSession().getAttribute("id");
         Object object = pjp.getArgs()[0];
