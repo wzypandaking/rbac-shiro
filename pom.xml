@@ -16,7 +16,9 @@
 
     <properties>
         <thymeleaf.shiro.version>1.0-SNAPSHOT</thymeleaf.shiro.version>
+        <!-- 记得修改 rbac-shiro/pom.xml -->
         <rbac.shiro.version>1.0-SNAPSHOT</rbac.shiro.version>
+        <!-- 记得修改 spring-boot-rbac-shiro/pom.xml -->
         <spring.boot.rbac.shiro.version>1.0-SNAPSHOT</spring.boot.rbac.shiro.version>
     </properties>
 
