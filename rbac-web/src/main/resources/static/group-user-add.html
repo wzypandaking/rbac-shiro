@@ -34,50 +34,50 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="base.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<!-- select2 -->
-<script src="js/select2/select2.min.js" cache="false"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
-<script>
-    var groupUUid = parent.document.getElementById("uuid").value;
-    $('input[name="groupUuid"]').val(groupUUid);
-    commonAjax({
-        url:'/rbac/auth/group/users',
-        data:{
-            uuid:groupUUid
-        },
-        dataType:'json',
-        success:function(result){
-            var optList = [];
-            var list = result.data;
-            for(var  k in  list) {
-                var item = list[k];
-                optList.push('<option value="' + item.uuid + '" ' + (item.choose ? 'selected="selected"' : '') + '>' + item.username + '</option>')
-            }
-            $('#select2-option').html(optList.join('')).select2();
-        }
-    });
-
-    $.validate();
-    $('form').submit(function(){
+<script th:replace="template/js"></script>
+<shiro:hasPermission values="RBAC_AUTHORITY_GROUP_USERS" logical="AND">
+    <script src="layui/lay/dest/layui.all.js" cache="false"></script>
+    <!-- select2 -->
+    <script src="js/select2/select2.min.js" cache="false"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+    <script>
+        var groupUUid = parent.document.getElementById("uuid").value;
+        $('input[name="groupUuid"]').val(groupUUid);
         commonAjax({
-            url: '/rbac/auth/group/user/add',
-            data:$(this).serialize(),
-            type:'post',
+            url:'/rbac/auth/group/users',
+            data:{
+                uuid:groupUUid
+            },
             dataType:'json',
-            success:function(result) {
-                if(result.success) {
-                    parent.location.reload();
-                } else {
-                    layer.msg(result.message);
+            success:function(result){
+                var optList = [];
+                var list = result.data;
+                for(var  k in  list) {
+                    var item = list[k];
+                    optList.push('<option value="' + item.uuid + '" ' + (item.choose ? 'selected="selected"' : '') + '>' + item.username + '</option>')
                 }
+                $('#select2-option').html(optList.join('')).select2();
             }
         });
-        return false;
-    });
-</script>
 
+        $.validate();
+        $('form').submit(function(){
+            commonAjax({
+                url: '/rbac/auth/group/user/add',
+                data:$(this).serialize(),
+                type:'post',
+                dataType:'json',
+                success:function(result) {
+                    if(result.success) {
+                        parent.location.reload();
+                    } else {
+                        layer.msg(result.message);
+                    }
+                }
+            });
+            return false;
+        });
+    </script>
+</shiro:hasPermission>
 </body>
 </html>

@@ -2,9 +2,10 @@ package rbac.dao.repository;
 
 import lombok.Getter;
 import lombok.Setter;
-import rbac.utils.RandomUtil;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**

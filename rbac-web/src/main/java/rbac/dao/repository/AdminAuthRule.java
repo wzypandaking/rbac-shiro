@@ -2,9 +2,10 @@ package rbac.dao.repository;
 
 import lombok.Getter;
 import lombok.Setter;
-import rbac.utils.RandomUtil;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -23,7 +24,7 @@ public class AdminAuthRule extends BaseEntity implements Serializable {
 
 
     @Column(name = "pid", updatable = false)
-    private Long pid;  // 父级id
+    private Long pid = 0L;  // 父级id
 
     @Column(name = "name", updatable = false)
     private String name; // 规则唯一标识

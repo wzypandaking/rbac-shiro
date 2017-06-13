@@ -5,7 +5,6 @@
 >
 <head th:include="template/top"></head>
 <body>
-<shiro:hasPermission values="RBAC_AUTHORITY_GROUP_ADD" logical="AND">
 <section class="vbox">
     <section>
         <section class="hbox stretch"> <!-- .aside -->
@@ -31,8 +30,9 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="base.js"></script>
+<script th:replace="template/js"></script>
+
+<shiro:hasPermission values="RBAC_AUTHORITY_GROUP_ADD" logical="AND">
 <script src="layui/lay/dest/layui.all.js" cache="false"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 <script>

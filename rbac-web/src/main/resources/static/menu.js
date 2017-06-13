@@ -2,10 +2,33 @@
  * Created by pandaking on 2017/5/24.
  */
 +(function(){
+
+    var profileTemplate = loadArtTemplate("profile");
+    commonAjax({
+        url: '/rbac/admin/user',
+        dataType: 'json',
+        success: function (result) {
+            var render = template.compile(profileTemplate);
+            var html = render({
+                adminUser:result.data
+            });
+            $('a#profile').html(html);
+        }
+    });
+    $('a.logout').click(function () {
+        commonAjax({
+            url: '/rbac/admin/logout',
+            success: function (result) {
+                window.location.href = "/rbac";
+            }
+        });
+    });
+
     var targetConfig = {
         "/rbac/version-license.html" : '/rbac/license.html',
         "/rbac/user_detail.html" : '/rbac/users.html',
-        "/rbac/change_password.html" : '/rbac/users.html'
+        "/rbac/change_password.html" : '/rbac/users.html',
+        "/rbac/group-rules.html" : '/rbac/groups.html',
     };
     var showPage = function(pid, resultMap){
         var trList = [];

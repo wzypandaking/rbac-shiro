@@ -30,41 +30,42 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="base.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
-<script>
-    var groupUuid = parent.document.getElementById("uuid").value;
-    $('input[name="uuid"]').val(groupUuid);
-    commonAjax({
-        url:'/rbac/auth/group/item',
-        data:{
-            uuid: groupUuid
-        },
-        dataType:'json',
-        success:function(result) {
-            $('input[name="title"]').val(result.data.title);
-        }
-    });
-    $.validate();
-    $('form').submit(function(){
+<script th:replace="template/js"></script>
+<shiro:hasPermission values="RBAC_AUTHORITY_GROUP_EDIT" logical="AND">
+    <script src="layui/lay/dest/layui.all.js" cache="false"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+    <script>
+        var groupUuid = parent.document.getElementById("uuid").value;
+        $('input[name="uuid"]').val(groupUuid);
         commonAjax({
-            url: '/rbac/auth/group/edit',
-            data:$(this).serialize(),
-            type:'post',
+            url:'/rbac/auth/group/item',
+            data:{
+                uuid: groupUuid
+            },
             dataType:'json',
             success:function(result) {
-                if(result.success) {
-                    parent.location.reload();
-                } else {
-                    layer.msg(result.message);
-                }
+                $('input[name="title"]').val(result.data.title);
             }
         });
-        return false;
-    });
-</script>
+        $.validate();
+        $('form').submit(function(){
+            commonAjax({
+                url: '/rbac/auth/group/edit',
+                data:$(this).serialize(),
+                type:'post',
+                dataType:'json',
+                success:function(result) {
+                    if(result.success) {
+                        parent.location.reload();
+                    } else {
+                        layer.msg(result.message);
+                    }
+                }
+            });
+            return false;
+        });
+    </script>
+</shiro:hasPermission>
 
 </body>
 </html>

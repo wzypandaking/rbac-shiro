@@ -69,18 +69,18 @@
                                                         <td>
                                                             <div class="doc-buttons">
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_EDIT" logical="AND">
-                                                                <button data-target="/rbac/group-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
+                                                                <button onclick="editGroup(this)" data-target="/rbac/group-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
-                                                                <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_EDIT" logical="AND">
+                                                                <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_DELETE" logical="AND">
                                                                 {{if item.type != 1}}
-                                                                <button data-target="/rbac/auth/group/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                                <button onclick="deleteGroup(this)" data-target="/rbac/auth/group/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
                                                                 {{/if}}
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_RULES" logical="AND">
                                                                 <a href="/rbac/group-rules.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="分配权限"><i class="fa fa-lock text"></i></a>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_USERS" logical="AND">
-                                                                <button data-target="/rbac/group-user-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-info" title="添加成员"><i class="fa fa-male text"></i></button>
+                                                                <button onclick="addGroupUser(this)" data-target="/rbac/group-user-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-info" title="添加成员"><i class="fa fa-male text"></i></button>
                                                                 </shiro:hasPermission>
                                                             </div>
                                                         </td>
@@ -111,67 +111,79 @@
 </section>
 <!--  当前操作UUID -->
 <input type="hidden" name="uuid" value="" id="uuid">
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="template-web.js"></script>
-<script src="base.js"></script>
+<script th:replace="template/js"></script>
 <script src="menu.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="jquery.paging.min.js"></script>
 <script>
     var groupsTemplate = loadArtTemplate('data-list');
-    var showPage = function(list){
-        var render = template.compile(groupsTemplate);
-        var trList = [];
-        for (var k in list) {
-            trList.push(render({
-                item:list[k]
-            }));
-        }
-        $('#data-list').html(trList.join(''));
-    };
+</script>
+<shiro:hasPermission values="RBAC_AUTHORITY_GROUP" logical="AND">
+    <script src="layui/lay/dest/layui.all.js" cache="false"></script>
+    <script src="jquery.paging.min.js"></script>
 
-    var loadGroups = function(page){
+    <!--    用户组列表 -->
+    <script>
+        var showPage = function(list){
+            var render = template.compile(groupsTemplate);
+            var trList = [];
+            for (var k in list) {
+                trList.push(render({
+                    item:list[k]
+                }));
+            }
+            $('#data-list').html(trList.join(''));
+        };
+
+        var loadGroups = function(page){
+            commonAjax({
+                url : "/rbac/auth/group/list",
+                data:{
+                    page : page
+                },
+                dataType:'json',
+                success:function(result) {
+                    showPage(result.list);
+                }
+            });
+        };
+
         commonAjax({
             url : "/rbac/auth/group/list",
-            data:{
-                page : page
-            },
+            data:{},
             dataType:'json',
             success:function(result) {
-                showPage(result.list);
+                buildPage("#pagination", result, loadGroups);
             }
         });
-    };
+    </script>
 
-    commonAjax({
-        url : "/rbac/auth/group/list",
-        data:{},
-        dataType:'json',
-        success:function(result) {
-            buildPage("#pagination", result, loadGroups);
-        }
-    });
-
-    $('#addGroup').click(function(){
-        layer.open({
-           type:2,
-           content:[$(this).data('target'), 'no'],
-           area:['350px', '250px']
-       });
-    });
-
-    $(document).on('click', '#data-list div.doc-buttons>button.btn', function(){
-        var index = $(this).index();
-        var target = $(this).data('target');
-        if(index == 0){
-            //  编辑
+    <!--添加用户组-->
+    <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_ADD" logical="AND"></shiro:hasPermission>
+    <script>
+        $('#addGroup').click(function(){
             layer.open({
                 type:2,
-                content:[target, 'no'],
+                content:[$(this).data('target'), 'no'],
                 area:['350px', '250px']
             });
-            $('input[name="uuid"]').val($(this).data('uuid'));
-        } else if(index == 1 ) {
+        });
+    </script>
+    <!--编辑用户组-->
+    <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_EDIT" logical="AND">
+    <script>
+        function editGroup(_self){
+            layer.open({
+                type:2,
+                content:[$(_self).data('target'), 'no'],
+                area:['350px', '250px']
+            });
+            $('input[name="uuid"]').val($(_self).data('uuid'));
+        }
+    </script>
+    </shiro:hasPermission>
+    <!--删除用户组-->
+    <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_DELETE" logical="AND">
+    <script>
+        function deleteGroup(_self) {
             //  删除
             layer.open({
                 type : 1,
@@ -179,7 +191,7 @@
                 btn:['确&nbsp;定', "再考虑一下"],
                 yes : function(){
                     commonAjax({
-                        url : target,
+                        url : $(_self).data('target'),
                         success : function(result) {
                             if(result.success) {
                                 window.location.reload();
@@ -190,19 +202,22 @@
                     });
                 }
             });
-        } else if(index == 2) {
-            //  赋予权限
-
-        } else if(index == 3) {
-            //  添加成员
+        }
+    </script>
+    </shiro:hasPermission>
+    <!--添加成员-->
+    <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_USERS" logical="AND">
+    <script>
+        function addGroupUser(_self) {
             layer.open({
                 type:2,
-                content:[target, 'no'],
-                area:['400px', '350px']
+                content:[$(_self).data('target'), 'no'],
+                area:['400px', '250px']
             });
-            $('input[name="uuid"]').val($(this).data('uuid'));
+            $('input[name="uuid"]').val($(_self).data('uuid'));
         }
-    });
-</script>
+    </script>
+    </shiro:hasPermission>
+</shiro:hasPermission>
 </body>
 </html>

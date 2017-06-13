@@ -47,27 +47,3 @@ var buildPage = function(ele, result, callback) {
         }
     });
 };
-
-
-var profileTemplate = loadArtTemplate("profile");
-commonAjax({
-    url: '/rbac/admin/user',
-    dataType: 'json',
-    success: function (result) {
-        var render = template.compile(profileTemplate);
-        var html = render({
-            adminUser:result.data
-        });
-        $('a#profile').html(html);
-    }
-});
-$('a.logout').click(function () {
-    commonAjax({
-        url: '/rbac/admin/logout',
-        success: function (result) {
-            window.location.href = "/rbac";
-        }
-    });
-});
-
-
