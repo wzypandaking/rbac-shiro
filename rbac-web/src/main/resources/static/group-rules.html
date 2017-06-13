@@ -30,36 +30,37 @@
             <!-- /.aside -->
 
             <section id="content">
-
-                <section class="scrollable padder">
-                    <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
-                        <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="groups.html">用户组管理</a></li>
-                        <li class="active" id="groupName"></li>
-                        <li class="active">分配权限</li>
-                    </ul>
-                    <section class="vbox">
-                        <h4 class="m-t-none">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <button id="nestable-menu" class="btn btn-xs btn-default active" data-toggle="class:show">
-                                        <i class="fa fa-plus text"></i> <span class="text">展开</span>
-                                        <i class="fa fa-minus text-active"></i> <span class="text-active">收起</span>
-                                    </button> 分配权限
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                            <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
+                            <li><a href="groups.html">用户组管理</a></li>
+                            <li class="active" id="groupName"></li>
+                            <li class="active">分配权限</li>
+                        </ul>
+                        <section class="scrollable wrapper w-f">
+                            <h4 class="m-t-none">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <button id="nestable-menu" class="btn btn-xs btn-default active" data-toggle="class:show">
+                                            <i class="fa fa-plus text"></i> <span class="text">展开</span>
+                                            <i class="fa fa-minus text-active"></i> <span class="text-active">收起</span>
+                                        </button> 分配权限
+                                    </div>
+                                    <div class="col-lg-4 col-lg-push-2">
+                                        <button class="btn btn-sm btn-primary" type="submit" onclick="$('form').submit()">保存</button>
+                                    </div>
                                 </div>
-                                <div class="col-lg-4 col-lg-push-2">
-                                    <button class="btn btn-sm btn-primary" type="submit" onclick="$('form').submit()">保存</button>
+                            </h4>
+                            <div class="row m-b">
+                                <div class="col-lg-12">
+                                    <form>
+                                        <input type="hidden" name="uuid" value=""/>
+                                        <div class="dd" id="nestable1"></div>
+                                    </form>
                                 </div>
                             </div>
-                        </h4>
-                        <div class="row m-b">
-                            <div class="col-lg-12">
-                                <form>
-                                    <input type="hidden" name="uuid" value=""/>
-                                    <div class="dd" id="nestable1"></div>
-                                </form>
-                            </div>
-                        </div>
+                        </section>
                     </section>
                 </section>
             </section>
