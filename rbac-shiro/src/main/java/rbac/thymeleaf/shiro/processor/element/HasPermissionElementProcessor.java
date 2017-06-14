@@ -55,7 +55,7 @@ public class HasPermissionElementProcessor extends AbstractConditionalVisibility
         permission = permission.toLowerCase().replace("_", "/");
         String logical = getRawValue(element, "logical");
         if (AND.equals(logical)) {
-            ShiroFacade.hasAllPermissions(permission.split(","));
+           return ShiroFacade.hasAllPermissions(permission.split(","));
         }
         return ShiroFacade.hasAllPermissions(permission.split(","));
     }

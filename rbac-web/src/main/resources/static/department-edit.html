@@ -23,10 +23,12 @@
                                         <p>部门名称:</p>
                                         <input type="text" name="name" autocomplete="off" class="form-control" placeholder="请输入部门名称" autocomplete="off" data-validation="required" data-validation-error-msg="菜单名称不能为空">
                                     </div>
+                                    <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_USERS" logical="AND">
                                     <div class="form-group">
                                         <p>选择用户:</p>
                                         <select name="userUuid" id="select2-option" style="width: 100%" multiple="multiple"></select>
                                     </div>
+                                    </shiro:hasPermission>
 
                                     <input type="hidden" name="uuid" value="">
                                     <br />
@@ -40,62 +42,63 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="base.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<!-- select2 -->
-<script src="js/select2/select2.min.js" cache="false"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
-<script>
-    var departmentUuid = parent.document.getElementById("uuid").value;
-    $('input[name="uuid"]').val(departmentUuid);
-
-    commonAjax({
-        url:'/rbac/department/users',
-        data:{
-            uuid:departmentUuid
-        },
-        dataType:'json',
-        success:function(result){
-            var optList = [];
-            var list = result.data;
-            for(var  k in  list) {
-                var item = list[k];
-                optList.push('<option value="' + item.uuid + '" ' + (item.choose ? 'selected="selected"' : '') + '>' + item.username + '</option>')
-            }
-            $('#select2-option').html(optList.join('')).select2();
-        }
-    });
-
-    commonAjax({
-        url:'/rbac/department/item',
-        data:{
-            uuid:departmentUuid
-        },
-        dataType:'json',
-        success:function(result) {
-            $('input[name="name"]').val(result.data.name);
-        }
-    });
-
-    $.validate();
-    $('form').submit(function(){
+<script th:replace="template/js"></script>
+<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_EDIT" logical="AND">
+    <!-- select2 -->
+    <script src="js/select2/select2.min.js" cache="false"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+    <script>
+        var departmentUuid = parent.document.getElementById("uuid").value;
+        $('input[name="uuid"]').val(departmentUuid);
         commonAjax({
-            url :'/rbac/department/edit',
-            data:$(this).serialize(),
+            url:'/rbac/department/item',
+            data:{
+                uuid:departmentUuid
+            },
             dataType:'json',
-            type:'post',
-            success:function(result){
-                if(result.success) {
-                    parent.location.reload();
-                } else {
-                    layer.msg(result.message);
-                }
+            success:function(result) {
+                $('input[name="name"]').val(result.data.name);
             }
         });
-        return false;
-    });
-</script>
 
+        $.validate();
+        $('form').submit(function(){
+            commonAjax({
+                url :'/rbac/department/edit',
+                data:$(this).serialize(),
+                dataType:'json',
+                type:'post',
+                success:function(result){
+                    if(result.success) {
+                        parent.location.reload();
+                    } else {
+                        layer.msg(result.message);
+                    }
+                }
+            });
+            return false;
+        });
+    </script>
+    <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_USERS" logical="AND">
+        <script>
+            commonAjax({
+                url:'/rbac/department/users',
+                data:{
+                    uuid:departmentUuid
+                },
+                dataType:'json',
+                success:function(result){
+                    var optList = [];
+                    var list = result.data;
+                    for(var  k in  list) {
+                        var item = list[k];
+                        optList.push('<option value="' + item.uuid + '" ' + (item.choose ? 'selected="selected"' : '') + '>' + item.username + '</option>')
+                    }
+                    $('#select2-option').html(optList.join('')).select2();
+                }
+            });
+        </script>
+    </shiro:hasPermission>
+</shiro:hasPermission>
 </body>
 </html>

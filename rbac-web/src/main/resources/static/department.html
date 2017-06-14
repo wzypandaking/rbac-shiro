@@ -64,11 +64,8 @@
                                                 <tbody id="data-list">
                                                     <tr>
                                                         <td>
-                                                            {{if pid > 0}}
-                                                            &nbsp;&nbsp;&nbsp;&nbsp;|
-                                                            {{/if}}
-                                                            <% for (var i = 0; i < deepNum; i ++) { %>
-                                                                -
+                                                            <% for (var i = 0; i <= deepNum; i ++) { %>
+                                                            &nbsp;&nbsp;<i class="fa fa-plus text"></i>
                                                             <% } %>
                                                             {{item.name}}
                                                         </td>
@@ -76,17 +73,15 @@
                                                             <div class="doc-buttons">
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_ADD" logical="AND">
                                                                     {{if pid == 0 }}
-                                                                    <button data-target="/rbac/department-add-parent.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-dark" title="添加上级部门"><i class="fa fa-plus text"></i><i class="fa fa-level-up text"></i></button>&nbsp;
-                                                                    {{else}}
-                                                                    <button class="hide"></button>
+                                                                    <button onclick="addDepartment(this)" data-target="/rbac/department-add-parent.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-dark" title="添加上级部门"><i class="fa fa-plus text"></i><i class="fa fa-level-up text"></i></button>&nbsp;
                                                                     {{/if}}
-                                                                    <button data-target="/rbac/department-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-primary" title="添加子部门"><i class="fa fa-plus text"></i><i class="fa fa-level-down text"></i></button>&nbsp;
+                                                                    <button onclick="addDepartment(this)" data-target="/rbac/department-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-primary" title="添加子部门"><i class="fa fa-plus text"></i><i class="fa fa-level-down text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_EDIT" logical="AND">
-                                                                    <button data-target="/rbac/department-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
+                                                                    <button onclick="editDepartment(this)" data-target="/rbac/department-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_DELETE" logical="AND">
-                                                                    <button data-target="/rbac/department/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                                    <button onclick="deleteDepartment(this)" data-target="/rbac/department/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                             </div>
                                                         </td>
@@ -115,14 +110,18 @@
 </section>
 <!--  当前操作UUID -->
 <input type="hidden" name="uuid" value="" id="uuid">
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="template-web.js"></script>
-<script src="base.js"></script>
+<script th:replace="template/js"></script>
 <script src="menu.js"></script>
+<script>
+    var departmentTemplate = loadArtTemplate('data-list');
+</script>
+
+<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT" logical="AND">
+
+</shiro:hasPermission>
 <script src="layui/lay/dest/layui.all.js" cache="false"></script>
 <script src="jquery.paging.min.js"></script>
 <script>
-    var departmentTemplate = loadArtTemplate('data-list');
     var showPage = function(pid, resultMap, deepNum){
         var trList = [];
         var list = resultMap[pid];
@@ -158,50 +157,64 @@
             $('#data-list').html(showPage(0, resultMap, 0));
         }
     });
-
-
+</script>
+<!--添加部门-->
+<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_ADD" logical="AND">
+<script>
     $('#addDepartment').click(function(){
         $('input[name="uuid"]').val('');
-        openWindow($(this).data('target'));
-    });
-
-    var openWindow = function(target) {
         layer.open({
             type:2,
-            content:[target, 'no'],
+            content:[$(this).data('target'), 'no'],
             area:['550px', '450px']
         });
-    };
-
-    $(document).on('click', '#data-list div.doc-buttons>button.btn', function(){
-        var index = $(this).index();
-        var target = $(this).data('target');
-        if(index == 0 || index == 1 || index == 2) {
-            //  编辑
-            openWindow(target);
-            $('input[name="uuid"]').val($(this).data('uuid'));
-        } else if(index == 3) {
-            layer.open({
-                type : 1,
-                content:'<div style="padding: 20px 80px;">你确定要删除吗？</div>',
-                btn:['确&nbsp;定', "再考虑一下"],
-                yes : function(){
-                    commonAjax({
-                        url : target,
-                        success : function(result) {
-                            if(result.success) {
-                                window.location.reload();
-                            } else {
-                                layer.msg(result.message);
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            layer.msg("非法操作");
-        }
     });
+    function addDepartment(_self) {
+        $('input[name="uuid"]').val($(_self).data('uuid'));
+        layer.open({
+            type:2,
+            content:[$(_self).data('target'), 'no'],
+            area:['550px', '450px']
+        });
+    }
 </script>
+</shiro:hasPermission>
+<!--编辑部门-->
+<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_EDIT" logical="AND">
+<script>
+    function editDepartment(_self) {
+        $('input[name="uuid"]').val($(_self).data('uuid'));
+        layer.open({
+            type:2,
+            content:[$(_self).data('target'), 'no'],
+            area:['550px', '450px']
+        });;
+    }
+</script>
+</shiro:hasPermission>
+<!--删除部门-->
+<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_DELETE" logical="AND">
+<script>
+    function deleteDepartment(_self) {
+        layer.open({
+            type : 1,
+            content:'<div style="padding: 20px 80px;">你确定要删除吗？</div>',
+            btn:['确&nbsp;定', "再考虑一下"],
+            yes : function(){
+                commonAjax({
+                    url : $(_self).data('target'),
+                    success : function(result) {
+                        if(result.success) {
+                            window.location.reload();
+                        } else {
+                            layer.msg(result.message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+</shiro:hasPermission>
 </body>
 </html>
