@@ -37,6 +37,10 @@
 			<xsd:enumeration value="RBAC_AUTHORITY_DEPARTMENT_DELETE"/>
 			<xsd:enumeration value="RBAC_AUTHORITY_DEPARTMENT_USERS"/>
 			<xsd:enumeration value="RBAC_VC_LICENSE_STATUS"/>
+			<xsd:enumeration value="RBAC_PROFILE"/>
+			<xsd:enumeration value="RBAC_PROFILE_INFO"/>
+			<xsd:enumeration value="RBAC_PROFILE_CHPASWD"/>
+			<xsd:enumeration value="RBAC_AUTHORITY_USER_CHPASSWD"/>
         </xsd:restriction>
     </xsd:simpleType>
     <xsd:element name="hasPermission">

@@ -46,33 +46,32 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="base.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
-<script>
-    var versionUUid = parent.document.getElementById("uuid").value;
-    $('input[name="versionUuid"]').val(versionUUid);
+<script th:replace="template/js"></script>
+<shiro:hasPermission values="RBAC_VC_VERSION_LICENSE_ADD" logical="AND">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+    <script>
+        var versionUUid = parent.document.getElementById("uuid").value;
+        $('input[name="versionUuid"]').val(versionUUid);
 
-    $.validate();
+        $.validate();
 
-    $('form').submit(function(){
-        commonAjax({
-           url:'/rbac/license/create',
-            data: $(this).serialize(),
-            dataType:'json',
-            type:'post',
-            success:function(result){
-                if(result.success) {
-                    window.parent.location.reload();
-                } else {
-                    layer.msg(result.message);
+        $('form').submit(function(){
+            commonAjax({
+               url:'/rbac/license/create',
+                data: $(this).serialize(),
+                dataType:'json',
+                type:'post',
+                success:function(result){
+                    if(result.success) {
+                        window.parent.location.reload();
+                    } else {
+                        layer.msg(result.message);
+                    }
                 }
-            }
+            });
+            return false;
         });
-        return false;
-    });
-</script>
-
+    </script>
+</shiro:hasPermission>
 </body>
 </html>

@@ -76,13 +76,13 @@
                                                     <td>
                                                         <div class="doc-buttons">
                                                             <shiro:hasPermission values="RBAC_AUTHORITY_RULE_ADD" logical="AND">
-                                                            <button data-target="/rbac/rule-add.html" data-uuid="{{item.uuid}}" data-name="{{item.name}}" class="btn btn-sm btn-primary" title="添加子权限"><i class="fa fa-plus text"></i></button>&nbsp;
+                                                            <button onclick="addRule(this)" data-target="/rbac/rule-add.html" data-uuid="{{item.uuid}}" data-name="{{item.name}}" class="btn btn-sm btn-primary" title="添加子权限"><i class="fa fa-plus text"></i></button>&nbsp;
                                                             </shiro:hasPermission>
                                                             <shiro:hasPermission values="RBAC_AUTHORITY_RULE_EDIT" logical="AND">
-                                                            <button data-target="/rbac/rule-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
+                                                            <button onclick="editRule(this)" data-target="/rbac/rule-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                             </shiro:hasPermission>
                                                             <shiro:hasPermission values="RBAC_AUTHORITY_RULE_DELETE" logical="AND">
-                                                            <button data-target="/rbac/rules/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                            <button onclick="deleteRule(this)" data-target="/rbac/rules/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
                                                             </shiro:hasPermission>
                                                         </div>
                                                     </td>
@@ -114,93 +114,93 @@
 <!--  当前操作UUID -->
 <input type="hidden" name="uuid" value="" id="uuid">
 <input type="hidden" name="name" value="" id="name">
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="template-web.js"></script>
-<script src="base.js"></script>
+<script th:replace="template/js"></script>
 <script src="menu.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="jquery.paging.min.js"></script>
 <script>
     var ruleTemplate = loadArtTemplate('data-list');
-    var showPage = function(pid, resultMap, deepNum){
-        var trList = [];
-        var list = resultMap[pid];
-        for(var k in list) {
-            var item = list[k];
-            var render = template.compile(ruleTemplate);
-            var html = render({
-                pid:pid,
-                deepNum:deepNum,
-                item:item
-            });
-            trList.push(html);
-            if(resultMap[item.id] != undefined) {
-                trList.push(showPage(item.id, resultMap, deepNum + 1));
-            }
-        }
-        return trList.join('');
-    };
-
-    commonAjax({
-        url : "/rbac/rules/list",
-        data:{},
-        dataType:'json',
-        success:function(result) {
-            var resultMap = {};
-            for(var k in result.data) {
-                var item = result.data[k];
-                if(resultMap[item.pid] == undefined) {
-                    resultMap[item.pid] = [];
+</script>
+<shiro:hasPermission values="RBAC_AUTHORITY_RULE" logical="AND">
+    <script src="jquery.paging.min.js"></script>
+    <script>
+        var showPage = function(pid, resultMap, deepNum){
+            var trList = [];
+            var list = resultMap[pid];
+            for(var k in list) {
+                var item = list[k];
+                var render = template.compile(ruleTemplate);
+                var html = render({
+                    pid:pid,
+                    deepNum:deepNum,
+                    item:item
+                });
+                trList.push(html);
+                if(resultMap[item.id] != undefined) {
+                    trList.push(showPage(item.id, resultMap, deepNum + 1));
                 }
-                resultMap[item.pid].push(item);
             }
-            var trList = showPage(0, resultMap, 0);
-            $('#data-list').html(trList);
-        }
-    });
+            return trList.join('');
+        };
 
-
-    $('#addRule').click(function(){
-        $('input[name="uuid"]').val('');
-        openWindow($(this).data('target'));
-    });
-
-    var openWindow = function(target) {
-        layer.open({
-            type:2,
-            content:[target, 'no'],
-            area:['400px', '300px']
+        commonAjax({
+            url : "/rbac/rules/list",
+            data:{},
+            dataType:'json',
+            success:function(result) {
+                var resultMap = {};
+                for(var k in result.data) {
+                    var item = result.data[k];
+                    if(resultMap[item.pid] == undefined) {
+                        resultMap[item.pid] = [];
+                    }
+                    resultMap[item.pid].push(item);
+                }
+                var trList = showPage(0, resultMap, 0);
+                $('#data-list').html(trList);
+            }
         });
-    };
 
-    $(document).on('click', '#data-list div.doc-buttons>button.btn', function(){
-        var index = $(this).index();
-        var target = $(this).data('target');
-        if(index == 0) {
-            //  编辑
-            $('input[name="uuid"]').val($(this).data('uuid'));
-            $('input[name="name"]').val($(this).data('name'));
+    </script>
+    <shiro:hasPermission values="RBAC_AUTHORITY_RULE_ADD" logical="AND">
+    <script>
+        $('#addRule').click(function(){
+            $('input[name="uuid"]').val('');
+            openWindow($(this).data('target'));
+        });
+
+        function addRule(_self) {
+            $('input[name="uuid"]').val($(_self).data('uuid'));
+            $('input[name="name"]').val($(_self).data('name'));
             layer.open({
                 type:2,
                 content:[target, 'no'],
                 area:['400px', '300px']
             });
-        } else if(index == 1 ) {
+        }
+    </script>
+    </shiro:hasPermission>
+    <shiro:hasPermission values="RBAC_AUTHORITY_RULE_EDIT" logical="AND">
+    <script>
+        function editRule(_self) {
             //  编辑
-            $('input[name="uuid"]').val($(this).data('uuid'));
+            $('input[name="uuid"]').val($(_self).data('uuid'));
             layer.open({
                 type:2,
-                content:[target, 'no'],
+                content:[$(_self).data('target'), 'no'],
                 area:['400px', '200px']
             });
-        } else if(index == 2) {
+        }
+    </script>
+    </shiro:hasPermission>
+    <shiro:hasPermission values="RBAC_AUTHORITY_RULE_DELETE" logical="AND">
+    <script>
+        function deleteRule(_self) {
             layer.open({
                 type : 1,
                 content:'<div style="padding: 20px 80px;">你确定要删除吗？</div>',
                 btn:['确&nbsp;定', "再考虑一下"],
                 yes : function(){
                     commonAjax({
-                        url : target,
+                        url : $(_self).data('target'),
                         success : function(result) {
                             if(result.success) {
                                 window.location.reload();
@@ -211,11 +211,9 @@
                     });
                 }
             });
-        } else {
-            layer.msg("非法操作");
-            return;
         }
-    });
-</script>
+    </script>
+    </shiro:hasPermission>
+</shiro:hasPermission>
 </body>
 </html>

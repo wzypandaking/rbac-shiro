@@ -53,10 +53,9 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="base.js"></script>
-<script src="menus.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script th:replace="template/js"></script>
+<shiro:hasPermission values="RBAC_SYSTEM_MENU_EDIT" logical="AND">
+<script src="menu-rule.js"></script>
 <!-- select2 -->
 <script src="js/select2/select2.min.js" cache="false"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
@@ -99,6 +98,6 @@
         return false;
     });
 </script>
-
+</shiro:hasPermission>
 </body>
 </html>

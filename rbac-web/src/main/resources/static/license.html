@@ -30,9 +30,11 @@
                                         <form id="searchForm">
                                         <div class="row m-t-sm">
                                             <div class="col-sm-8 m-b-xs">
+                                                <shiro:hasPermission values="RBAC_VC_VERSION" logical="AND">
                                                 <div class="col-lg-10">
                                                     <select id="versionUuid" name="versionUuid" class="select2-offscreen" style="width: 100%" data-placeholder="版本筛选"></select>
                                                 </div>
+                                                </shiro:hasPermission>
                                             </div>
                                             <div class="col-sm-4 m-b-xs">
                                                 <div class="input-group">
@@ -52,7 +54,9 @@
                                                     <thead>
                                                     <tr>
                                                         <th>license key</th>
+                                                        <shiro:hasPermission values="RBAC_VC_LICENSE_STATUS" logical="AND">
                                                         <th>状态</th>
+                                                        </shiro:hasPermission>
                                                         <th>过期时间</th>
                                                         <th>创建时间</th>
                                                         <th></th>
@@ -61,12 +65,12 @@
                                                     <tbody id="data-list">
                                                         <tr>
                                                             <td>{{item.license}}</td>
+                                                            <shiro:hasPermission values="RBAC_VC_LICENSE_STATUS" logical="AND">
                                                             <td>
                                                                 {{if item.status == 2}}
                                                                 已过期;
                                                                 {{else}}
                                                                 <div class="m-b-sm">
-                                                                    <shiro:hasPermission values="RBAC_VC_LICENSE_STATUS" logical="AND">
                                                                     <div class="btn-group toogle-status" data-toggle="buttons" data-id="{{item.uuid}}">
                                                                         {{if item.status == 1}}
                                                                         <label class="btn btn-sm btn-info">
@@ -84,10 +88,10 @@
                                                                             <i class="fa fa-check text-active"></i> 解禁 </label>
                                                                         {{/if}}
                                                                     </div>
-                                                                    </shiro:hasPermission>
                                                                 </div>
                                                                 {{/if}}
                                                             </td>
+                                                            </shiro:hasPermission>
                                                             <td>{{item.expireTime}}</td>
                                                             <td>{{item.addTime}}</td>
                                                             <td>
@@ -124,98 +128,101 @@
     </section>
 </section>
 <input type="hidden" id="uuid" value="">
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="template-web.js"></script>
-<script src="base.js"></script>
+<script th:replace="template/js"></script>
 <script src="menu.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="jquery.paging.min.js"></script>
-<script src="js/select2/select2.min.js" cache="false"></script>
 <script>
     var licenseTemplate = loadArtTemplate('data-list');
-    commonAjax({
-        url : '/rbac/version/listAll',
-        dataType:'json',
-        success:function (result) {
-            if(!result.success) {
-                return;
-            }
-            var optList = ['<option value="">请选择版本</option>'];
-            for (var key in result.data) {
-                var item = result.data[key];
-                optList.push('<option value="' + item.uuid + '">' + item.title + '</option>')
-            }
-            $('#versionUuid').html(optList.join('')).select2();
-        }
-    });
-    $('#searchForm').submit(function () {
-        initPagePlugin();
-        return false;
-    });
-    $('#versionUuid').change(function(){
-        $('#searchForm').submit();
-    });
-
-    var showPage = function(list){
-        var trList = [];
-        for(var k in list) {
-            var render = template.compile(licenseTemplate);
-            trList.push(render({
-                item:list[k]
-            }));
-        }
-        $('#data-list').html(trList.join(''));
-    };
-
-    var loadLicense = function(page){
-        commonAjax({
-            url : "/rbac/license/list",
-            data: $('#searchForm').serialize() + "&page=" + page,
-            dataType:'json',
-            success:function(result) {
-                showPage(result.list);
-            }
-        });
-    };
-
-    function initPagePlugin() {
-        commonAjax({
-            url : "/rbac/license/list",
-            data:$('#searchForm').serialize(),
-            dataType:'json',
-            success:function(result) {
-                buildPage("#pagination", result, loadLicense);
-            }
-        });
-    }
-    initPagePlugin();
-
-    $('#addLicense').click(function(){
-        layer.open({
-            type:2,
-            content:[$(this).data('target'), 'no'],
-            area:['450px', '300px']
-        });
-    });
-
-    $(document).on('click', '.toogle-status', function(){
-        var uuid = $(this).data('id');
-        var status = $(this).find('input:checked').val();
-        console.log($(this).find('input:checked').val());
-        commonAjax({
-            url : '/rbac/license/toggleStatus',
-            data : {
-                uuid : uuid,
-                status : status
-            },
-            type : 'post',
-            dataType:'json',
-            success:function(result){
-
-            }
-        });
-    });
-
 </script>
+
+<shiro:hasPermission values="RBAC_VC_LICENSE" logical="AND">
+    <script src="jquery.paging.min.js"></script>
+    <script src="js/select2/select2.min.js" cache="false"></script>
+    <!--加载版本列表-->
+    <shiro:hasPermission values="RBAC_VC_VERSION" logical="AND">
+        <script>
+            commonAjax({
+                url : '/rbac/version/listAll',
+                dataType:'json',
+                success:function (result) {
+                    if(!result.success) {
+                        return;
+                    }
+                    var optList = ['<option value="">请选择版本</option>'];
+                    for (var key in result.data) {
+                        var item = result.data[key];
+                        optList.push('<option value="' + item.uuid + '">' + item.title + '</option>')
+                    }
+                    $('#versionUuid').html(optList.join('')).select2();
+                }
+            });
+        </script>
+    </shiro:hasPermission>
+    <!--加载版本的license列表-->
+    <script>
+        $('#searchForm').submit(function () {
+            initPagePlugin();
+            return false;
+        });
+        $('#versionUuid').change(function(){
+            $('#searchForm').submit();
+        });
+
+        var showPage = function(list){
+            var trList = [];
+            for(var k in list) {
+                var render = template.compile(licenseTemplate);
+                trList.push(render({
+                    item:list[k]
+                }));
+            }
+            $('#data-list').html(trList.join(''));
+        };
+
+        var loadLicense = function(page){
+            commonAjax({
+                url : "/rbac/license/list",
+                data: $('#searchForm').serialize() + "&page=" + page,
+                dataType:'json',
+                success:function(result) {
+                    showPage(result.list);
+                }
+            });
+        };
+
+        function initPagePlugin() {
+            commonAjax({
+                url : "/rbac/license/list",
+                data:$('#searchForm').serialize(),
+                dataType:'json',
+                success:function(result) {
+                    buildPage("#pagination", result, loadLicense);
+                }
+            });
+        }
+        initPagePlugin();
+    </script>
+    <!--切换版本的可用-->
+    <shiro:hasPermission values="RBAC_VC_LICENSE_STATUS" logical="AND">
+    <script>
+        $(document).on('click', '.toogle-status', function(){
+            var uuid = $(this).data('id');
+            var status = $(this).find('input:checked').val();
+            console.log($(this).find('input:checked').val());
+            commonAjax({
+                url : '/rbac/license/toggleStatus',
+                data : {
+                    uuid : uuid,
+                    status : status
+                },
+                type : 'post',
+                dataType:'json',
+                success:function(result){
+
+                }
+            });
+        });
+    </script>
+    </shiro:hasPermission>
+</shiro:hasPermission>
 </body>
 </html>

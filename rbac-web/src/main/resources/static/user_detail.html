@@ -34,7 +34,9 @@
                                                 </a>
                                                 <div class="clear">
                                                     <div class="h3 m-t-xs m-b-xs text-white"> {{profile.username}} </div>
+                                                    <shiro:hasPermission values="RBAC_AUTHORITY_USER_CHPASSWD" logical="AND">
                                                     <a href="/rbac/change_password.html?uuid={{uuid}}"><small class="text-muted">修改密码</small></a>
+                                                    </shiro:hasPermission>
                                                 </div>
                                             </div>
                                         </header>
@@ -64,14 +66,10 @@
 </section>
 
 
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="js/charts/easypiechart/jquery.easy-pie-chart.js" cache="false"></script>
-<script src="js/charts/sparkline/jquery.sparkline.min.js" cache="false"></script>
+<script th:replace="template/js"></script>
+<shiro:hasPermission values="RBAC_AUTHORITY_USER" logical="AND">
 <script src="uploadify/jquery.uploadify.min.js"></script>
-<script src="template-web.js"></script>
 
-<script src="base.js"></script>
 <script src="menu.js"></script>
 <script>
     var uuid = getQueryString(window.location, "uuid");
@@ -111,5 +109,6 @@
         }
     });
 </script>
+</shiro:hasPermission>
 </body>
 </html>

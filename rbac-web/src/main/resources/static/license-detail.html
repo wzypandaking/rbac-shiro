@@ -49,11 +49,10 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="base.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="js/zeroclipboard/ZeroClipboard.min.js"></script>
 <textarea id="licenseContent" class="hide form-control disabled" autocomplete="off" rows="15" disabled></textarea>
+<script th:replace="template/js"></script>
+<shiro:hasPermission values="RBAC_VC_LICENSE_VIEW" logical="AND">
+<script src="js/zeroclipboard/ZeroClipboard.min.js"></script>
 <script>
     var licenseUuid = getQueryString(location, "uuid");
     if (null === licenseUuid || licenseUuid.length === 0) {
@@ -88,6 +87,6 @@
        });
     });
 </script>
-
+</shiro:hasPermission>
 </body>
 </html>

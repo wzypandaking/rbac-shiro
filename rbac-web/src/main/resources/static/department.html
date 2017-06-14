@@ -115,106 +115,102 @@
 <script>
     var departmentTemplate = loadArtTemplate('data-list');
 </script>
-
 <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT" logical="AND">
-
-</shiro:hasPermission>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="jquery.paging.min.js"></script>
-<script>
-    var showPage = function(pid, resultMap, deepNum){
-        var trList = [];
-        var list = resultMap[pid];
-        for(var k in list) {
-            var item = list[k];
-            var render = template.compile(departmentTemplate);
-            var html = render({
-                pid:pid,
-                deepNum:deepNum,
-                item:item
-            });
-            trList.push(html);
-            if(resultMap[item.id] != undefined) {
-                trList.push(showPage(item.id, resultMap, deepNum + 1));
-            }
-        }
-        return trList.join('');
-    };
-
-    commonAjax({
-        url : "/rbac/department/list",
-        data:{},
-        dataType:'json',
-        success:function(result) {
-            var resultMap = {};
-            for(var k in result.data) {
-                var item = result.data[k];
-                if(resultMap[item.pid] == undefined) {
-                    resultMap[item.pid] = [];
-                }
-                resultMap[item.pid].push(item);
-            }
-            $('#data-list').html(showPage(0, resultMap, 0));
-        }
-    });
-</script>
-<!--添加部门-->
-<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_ADD" logical="AND">
-<script>
-    $('#addDepartment').click(function(){
-        $('input[name="uuid"]').val('');
-        layer.open({
-            type:2,
-            content:[$(this).data('target'), 'no'],
-            area:['550px', '450px']
-        });
-    });
-    function addDepartment(_self) {
-        $('input[name="uuid"]').val($(_self).data('uuid'));
-        layer.open({
-            type:2,
-            content:[$(_self).data('target'), 'no'],
-            area:['550px', '450px']
-        });
-    }
-</script>
-</shiro:hasPermission>
-<!--编辑部门-->
-<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_EDIT" logical="AND">
-<script>
-    function editDepartment(_self) {
-        $('input[name="uuid"]').val($(_self).data('uuid'));
-        layer.open({
-            type:2,
-            content:[$(_self).data('target'), 'no'],
-            area:['550px', '450px']
-        });;
-    }
-</script>
-</shiro:hasPermission>
-<!--删除部门-->
-<shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_DELETE" logical="AND">
-<script>
-    function deleteDepartment(_self) {
-        layer.open({
-            type : 1,
-            content:'<div style="padding: 20px 80px;">你确定要删除吗？</div>',
-            btn:['确&nbsp;定', "再考虑一下"],
-            yes : function(){
-                commonAjax({
-                    url : $(_self).data('target'),
-                    success : function(result) {
-                        if(result.success) {
-                            window.location.reload();
-                        } else {
-                            layer.msg(result.message);
-                        }
-                    }
+    <script src="jquery.paging.min.js"></script>
+    <script>
+        var showPage = function(pid, resultMap, deepNum){
+            var trList = [];
+            var list = resultMap[pid];
+            for(var k in list) {
+                var item = list[k];
+                var render = template.compile(departmentTemplate);
+                var html = render({
+                    pid:pid,
+                    deepNum:deepNum,
+                    item:item
                 });
+                trList.push(html);
+                if(resultMap[item.id] != undefined) {
+                    trList.push(showPage(item.id, resultMap, deepNum + 1));
+                }
+            }
+            return trList.join('');
+        };
+
+        commonAjax({
+            url : "/rbac/department/list",
+            data:{},
+            dataType:'json',
+            success:function(result) {
+                var resultMap = {};
+                for(var k in result.data) {
+                    var item = result.data[k];
+                    if(resultMap[item.pid] == undefined) {
+                        resultMap[item.pid] = [];
+                    }
+                    resultMap[item.pid].push(item);
+                }
+                $('#data-list').html(showPage(0, resultMap, 0));
             }
         });
-    }
-</script>
+    </script>
+    <!--添加部门-->
+    <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_ADD" logical="AND">
+    <script>
+        $('#addDepartment').click(function(){
+            $('input[name="uuid"]').val('');
+            layer.open({
+                type:2,
+                content:[$(this).data('target'), 'no'],
+                area:['550px', '450px']
+            });
+        });
+        function addDepartment(_self) {
+            $('input[name="uuid"]').val($(_self).data('uuid'));
+            layer.open({
+                type:2,
+                content:[$(_self).data('target'), 'no'],
+                area:['550px', '450px']
+            });
+        }
+    </script>
+    </shiro:hasPermission>
+    <!--编辑部门-->
+    <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_EDIT" logical="AND">
+    <script>
+        function editDepartment(_self) {
+            $('input[name="uuid"]').val($(_self).data('uuid'));
+            layer.open({
+                type:2,
+                content:[$(_self).data('target'), 'no'],
+                area:['550px', '450px']
+            });;
+        }
+    </script>
+    </shiro:hasPermission>
+    <!--删除部门-->
+    <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_DELETE" logical="AND">
+    <script>
+        function deleteDepartment(_self) {
+            layer.open({
+                type : 1,
+                content:'<div style="padding: 20px 80px;">你确定要删除吗？</div>',
+                btn:['确&nbsp;定', "再考虑一下"],
+                yes : function(){
+                    commonAjax({
+                        url : $(_self).data('target'),
+                        success : function(result) {
+                            if(result.success) {
+                                window.location.reload();
+                            } else {
+                                layer.msg(result.message);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
 </shiro:hasPermission>
 </body>
 </html>

@@ -130,74 +130,79 @@
         </section>
     </section>
 </section>
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="template-web.js"></script>
-<script src="base.js"></script>
+<script th:replace="template/js"></script>
 <script src="menu.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="jquery.paging.min.js"></script>
 <script>
     var usersTemplate = loadArtTemplate('data-list');
-    var showPage = function(list){
-        var trList = [];
-        for(var k in list) {
-            var render = template.compile(usersTemplate);
-            trList.push(render({
-                item:list[k]
-            }));
-        }
-        $('#data-list').html(trList.join(''));
-    };
+</script>
+<shiro:hasPermission values="RBAC_AUTHORITY_USER" logical="AND">
+    <script src="jquery.paging.min.js"></script>
+    <script>
+        var showPage = function(list){
+            var trList = [];
+            for(var k in list) {
+                var render = template.compile(usersTemplate);
+                trList.push(render({
+                    item:list[k]
+                }));
+            }
+            $('#data-list').html(trList.join(''));
+        };
 
-    var loadUsers = function(page){
+        var loadUsers = function(page){
+            commonAjax({
+                url : "/rbac/user/list",
+                data:{
+                    page : page
+                },
+                dataType:'json',
+                success:function(result) {
+                    showPage(result.list);
+                }
+            });
+        };
+
         commonAjax({
             url : "/rbac/user/list",
-            data:{
-                page : page
-            },
+            data:{},
             dataType:'json',
             success:function(result) {
-                showPage(result.list);
+                buildPage("#pagination", result, loadUsers);
             }
         });
-    };
+    </script>
+    <shiro:hasPermission values="RBAC_AUTHORITY_USER_LOGIN" logical="AND">
+    <script>
+        $(document).on('click', '.toogle-status', function(){
+            var uuid = $(this).data('id');
+            var status = $(this).find('input:checked').val();
+            console.log($(this).find('input:checked').val());
+            commonAjax({
+                url : '/rbac/user/toggleStatus',
+                data : {
+                    uuid : uuid,
+                    status : status
+                },
+                type : 'post',
+                dataType:'json',
+                success:function(result){
 
-    commonAjax({
-        url : "/rbac/user/list",
-        data:{},
-        dataType:'json',
-        success:function(result) {
-            buildPage("#pagination", result, loadUsers);
-        }
-    });
-
-
-
-    $(document).on('click', '.toogle-status', function(){
-        var uuid = $(this).data('id');
-        var status = $(this).find('input:checked').val();
-        console.log($(this).find('input:checked').val());
-        commonAjax({
-            url : '/rbac/user/toggleStatus',
-            data : {
-                uuid : uuid,
-                status : status
-            },
-            type : 'post',
-            dataType:'json',
-            success:function(result){
-
-            }
+                }
+            });
         });
-    });
-
-    $('#addUser').click(function(){
-        layer.open({
-           type:2,
-           content:[$(this).data('target'), 'no'],
-           area:['550px', '500px']
-       });
-    });
-</script>
+    </script>
+    </shiro:hasPermission>
+    <shiro:hasPermission values="RBAC_AUTHORITY_USER_ADD" logical="AND">
+    <script>
+        $('#addUser').click(function(){
+            layer.open({
+               type:2,
+               content:[$(this).data('target'), 'no'],
+               area:['550px', '500px']
+           });
+        });
+    </script>
+    </shiro:hasPermission>
+</shiro:hasPermission>
 </body>
 </html>

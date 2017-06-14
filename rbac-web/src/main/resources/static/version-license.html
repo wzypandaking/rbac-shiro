@@ -128,40 +128,40 @@
     </section>
 </section>
 <input type="hidden" id="uuid" value="">
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="template-web.js"></script>
-<script src="base.js"></script>
+<script th:replace="template/js"></script>
 <script src="menu.js"></script>
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
-<script src="jquery.paging.min.js"></script>
 <script>
     var licenseTemplate = loadArtTemplate('data-list');
-    var versionUuid = getQueryString(location, "uuid");
-    if (null ===  versionUuid || versionUuid.length === 0) {
-        window.location.href = '/rbac/version.html';
-    }
-    var versionExist = false;
-    commonAjax({
-        url : '/rbac/version/item',
-        data: {
-            uuid :versionUuid
-        },
-        async:false,
-        dataType:'json',
-        success:function (result) {
-            if(result.success) {
-                $('#versionName').html(result.data.title);
-                versionExist = true;
-                $('#uuid').val(versionUuid);
-            } else {
-                layer.alert(result.message, function(){
-                    window.location.href = '/rbac/version.html';
-                });
-            }
-        }
-    });
+</script>
+<shiro:hasPermission values="RBAC_VC_VERSION_LICENSE" logical="AND">
+    <script src="jquery.paging.min.js"></script>
 
-    if (versionExist) {
+    <script>
+        var versionUuid = getQueryString(location, "uuid");
+        if (null ===  versionUuid || versionUuid.length === 0) {
+            window.location.href = '/rbac/version.html';
+        }
+        commonAjax({
+            url : '/rbac/version/item',
+            data: {
+                uuid :versionUuid
+            },
+            async:false,
+            dataType:'json',
+            success:function (result) {
+                if(result.success) {
+                    $('#versionName').html(result.data.title);
+                    $('#uuid').val(versionUuid);
+                } else {
+                    layer.alert(result.message, function(){
+                        window.location.href = '/rbac/version.html';
+                    });
+                }
+            }
+        });
+    </script>
+    <!--license 列表-->
+    <script>
         var showPage = function(list){
             var trList = [];
             for(var k in list) {
@@ -197,7 +197,10 @@
                 buildPage("#pagination", result, loadLicense);
             }
         });
-
+    </script>
+    <!--添加license-->
+    <shiro:hasPermission values="RBAC_VC_VERSION_LICENSE_ADD" logical="AND">
+    <script>
         $('#addLicense').click(function(){
             layer.open({
                 type:2,
@@ -205,26 +208,31 @@
                 area:['450px', '300px']
             });
         });
-    }
+    </script>
+    </shiro:hasPermission>
+    <!--切换license状态-->
+    <shiro:hasPermission values="RBAC_VC_LICENSE_STATUS" logical="AND">
+    <script>
 
-    $(document).on('click', '.toogle-status', function(){
-        var uuid = $(this).data('id');
-        var status = $(this).find('input:checked').val();
-        console.log($(this).find('input:checked').val());
-        commonAjax({
-            url : '/rbac/license/toggleStatus',
-            data : {
-                uuid : uuid,
-                status : status
-            },
-            type : 'post',
-            dataType:'json',
-            success:function(result){
+        $(document).on('click', '.toogle-status', function(){
+            var uuid = $(this).data('id');
+            var status = $(this).find('input:checked').val();
+            console.log($(this).find('input:checked').val());
+            commonAjax({
+                url : '/rbac/license/toggleStatus',
+                data : {
+                    uuid : uuid,
+                    status : status
+                },
+                type : 'post',
+                dataType:'json',
+                success:function(result){
 
-            }
+                }
+            });
         });
-    });
-
-</script>
+    </script>
+    </shiro:hasPermission>
+</shiro:hasPermission>
 </body>
 </html>

@@ -20,7 +20,7 @@ public enum RbacPermissions {
 	RBAC_AUTHORITY("rbac/authority", "权限控制"),
 	RBAC_AUTHORITY_USER("rbac/authority/user", "账号管理"),
 	RBAC_AUTHORITY_USER_ADD("rbac/authority/user/add", "添加账号"),
-	RBAC_AUTHORITY_USER_LOGIN("rbac/authority/user/login", "禁止登陆"),
+	RBAC_AUTHORITY_USER_LOGIN("rbac/authority/user/login", "禁止账号登陆"),
 	RBAC_AUTHORITY_GROUP("rbac/authority/group", "用户组管理"),
 	RBAC_AUTHORITY_GROUP_ADD("rbac/authority/group/add", "添加用户组"),
 	RBAC_AUTHORITY_GROUP_EDIT("rbac/authority/group/edit", "修改用户组"),
@@ -37,6 +37,10 @@ public enum RbacPermissions {
 	RBAC_AUTHORITY_DEPARTMENT_DELETE("rbac/authority/department/delete", "删除部门"),
 	RBAC_AUTHORITY_DEPARTMENT_USERS("rbac/authority/department/users", "分配用户"),
 	RBAC_VC_LICENSE_STATUS("rbac/vc/license/status", "切换序列号状态"),
+	RBAC_PROFILE("rbac/profile", "个人中心"),
+	RBAC_PROFILE_INFO("rbac/profile/info", "个人信息"),
+	RBAC_PROFILE_CHPASWD("rbac/profile/chpaswd", "修改密码"),
+	RBAC_AUTHORITY_USER_CHPASSWD("rbac/authority/user/chpasswd", "修改密码"),
 
     ;
     private String name;
