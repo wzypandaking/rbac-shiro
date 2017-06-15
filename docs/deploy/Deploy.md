@@ -64,7 +64,7 @@
 >       1、mysql -uroot -p
 >       2、source ./install/auth.sql
 >   ## 2、部署
->       1、cd install
+>       1、cd ./build
 >       2、./startup.sh
 >   ## 3、访问
 >       1、http://ip:8081/rbac
