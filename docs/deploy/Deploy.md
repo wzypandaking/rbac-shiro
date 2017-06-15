@@ -10,7 +10,7 @@
 >       ./install/conf          #   部署脚本配置
 >       ./install/build.sh      #   打包并部署
 >       ./install/stop.sh       #   停止系统运行
->##1、脚本配置
+>## 1、脚本配置
 >
 >		# 项目路径
 >		RBAC_HOME=$(pwd)/..
@@ -30,7 +30,7 @@
 >		JAR_HOME=$BUILD_HOME/.rbac      
 >		JAR_NAME=rbacshiro.jar
 >
->##2、应用配置：application-prod.properties
+>## 2、应用配置：application-prod.properties
 >
 >		#应用占用的端口号
 >		server.port=8081
@@ -59,19 +59,19 @@
 >		logging.path=/Users/pandaking/logs/
 >		logging.level.root=INFO
 
->#二、部署篇
->   ##1、初始化数据
+># 二、部署篇
+>   ## 1、初始化数据
 >       2、mysql -uroot -p
 >       3、source ./install/auth.sql
->   ##2、部署
+>   ## 2、部署
 >       1、cd install
 >       2、./startup.sh
->   ##3、访问
+>   ## 3、访问
 >       1、http://ip:8081/rbac
 >       2、系统会初始化2个账号
 >           a、账号：admin  密码：1234qwer     (拥有最高权限)
 >           b、账号：test_001  密码：1qa2ws    (测试账号)
 
 
-#发布第三方权限依赖
+# 发布第三方权限依赖
 *   [Spring Boot](SpringBoot.md)
