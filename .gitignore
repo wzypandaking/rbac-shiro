@@ -5,3 +5,5 @@ upload/*
 *.iml
 .DS_Store
 *.log
+*.pid
+*.jar
