@@ -87,16 +87,20 @@
     });
 
     var url = window.location.pathname;
-    for(var k in targetConfig) {
-        var reg = new RegExp(k);
-        if(reg.test(url)) {
-            url = targetConfig[k];
-            break;
-        }
-    }
+
     var index = url.lastIndexOf("/");
     if(index > 0) {
         url = url.substr(index + 1, url.length);
+    }
+    var findResult = $('ul.nav').find('a[href$="' + url + '"]').length;
+    if (findResult == 0) {
+        for(var k in targetConfig) {
+            var reg = new RegExp(k);
+            if(reg.test(url)) {
+                url = targetConfig[k];
+                break;
+            }
+        }
     }
     $('ul.nav').find('a[href$="' + url + '"]')
         .parent().addClass('active')
