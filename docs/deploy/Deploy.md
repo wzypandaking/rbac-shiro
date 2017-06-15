@@ -28,6 +28,7 @@
 >		# 生产环境目录（构建完成后，jar包的启动目录）
 >		JAR_HOME=$BUILD_HOME/.rbac      
 >		JAR_NAME=rbacshiro.jar
+>
 >##2、应用配置：application-prod.propertiex
 >		#应用占用的端口号
 >		server.port=8081
