@@ -64,7 +64,7 @@
     $('input[name="uuid"]').val(menuUuid);
     +(function (menuUuid) {
         commonAjax({
-            url:'/rbac/menu/item',
+            url:'menu/item',
             data:{
                 uuid: menuUuid
             },
@@ -83,7 +83,7 @@
     $.validate();
     $('form').submit(function(){
         commonAjax({
-            url :'/rbac/menu/edit',
+            url :'menu/edit',
             data:$(this).serialize(),
             dataType:'json',
             type:'post',

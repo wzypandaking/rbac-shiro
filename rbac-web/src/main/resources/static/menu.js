@@ -5,7 +5,7 @@
 
     var profileTemplate = loadArtTemplate("profile");
     commonAjax({
-        url: '/rbac/admin/user',
+        url: 'admin/user',
         dataType: 'json',
         success: function (result) {
             var render = template.compile(profileTemplate);
@@ -17,7 +17,7 @@
     });
     $('a.logout').click(function () {
         commonAjax({
-            url: '/rbac/admin/logout',
+            url: 'admin/logout',
             success: function (result) {
                 window.location.href = "/rbac";
             }
@@ -25,10 +25,10 @@
     });
 
     var targetConfig = {
-        "/rbac/version-license.html" : '/rbac/license.html',
-        "/rbac/user_detail.html" : '/rbac/users.html',
-        "/rbac/change_password.html" : '/rbac/users.html',
-        "/rbac/group-rules.html" : '/rbac/groups.html',
+        "version-license.html" : 'license.html',
+        "group-rules.html" : 'groups.html',
+        "chpasswd.html" : 'users.html',
+        "user-detail.html" : 'users.html'
     };
     var showPage = function(pid, resultMap){
         var trList = [];
@@ -52,7 +52,7 @@
     };
 
     commonAjax({
-        url : "/rbac/menu/show",
+        url : "menu/show",
         data:{},
         dataType:'json',
         async:false,
@@ -86,11 +86,19 @@
         }
     });
 
-    var url = window.location.href;
-    var start = url.indexOf("/rbac");
-    var end = url.indexOf("?");
-    var target = url.substr(start, end > 0 ? (end - start) : url.length);
-    $('ul.nav').find('a[href="' + (typeof targetConfig[target] === "undefined" ? target : targetConfig[target]) + '"]')
+    var url = window.location.pathname;
+    for(var k in targetConfig) {
+        var reg = new RegExp(k);
+        if(reg.test(url)) {
+            url = targetConfig[k];
+            break;
+        }
+    }
+    var index = url.lastIndexOf("/");
+    if(index > 0) {
+        url = url.substr(index + 1, url.length);
+    }
+    $('ul.nav').find('a[href$="' + url + '"]')
         .parent().addClass('active')
         .parent().prev().addClass('active')
         .parent().addClass('active');

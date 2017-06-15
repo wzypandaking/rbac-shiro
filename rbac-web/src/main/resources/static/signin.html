@@ -10,7 +10,7 @@
         <a class="navbar-brand block" href="index.html">权限系统</a>
         <section class="panel panel-default bg-white m-t-lg">
             <header class="panel-heading text-center"><strong>登录</strong></header>
-            <form action="/rbac/admin/login" method="post" class="panel-body wrapper-lg">
+            <form action="admin/login" method="post" class="panel-body wrapper-lg">
                 <div class="form-group">
                     <label class="control-label">账号</label>
                     <input type="text" name="username" autocomplete="off" placeholder="请输入账号" class="form-control input-lg" data-validation="required" data-validation-error-msg="请输入账号" autofocus="autofocus" />
@@ -51,13 +51,13 @@
     $('form').submit(function(){
         var submitData = $(this).serialize();
         $.ajax({
-            url :"/rbac/admin/login",
+            url :"admin/login",
             data:submitData,
             method:"post",
             dataType:"json",
             success:function(result) {
                 if(result.success) {
-                    window.location.href = "/rbac/index.html";
+                    window.location.href = "index.html";
                 } else {
                     layer.msg(result.message);
                 }

@@ -100,7 +100,7 @@
 
     $('form').submit(function(){
         commonAjax({
-           url:'/rbac/version/add',
+           url:'version/add',
             data:$(this).serialize() + "&content=" + $('#editor').html(),
             dataType:'json',
             type:'post',

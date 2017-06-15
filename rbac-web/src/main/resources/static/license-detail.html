@@ -56,12 +56,12 @@
 <script>
     var licenseUuid = getQueryString(location, "uuid");
     if (null === licenseUuid || licenseUuid.length === 0) {
-        window.location.href = '/rbac/version.html';
+        window.location.href = 'version.html';
     }
 
     var licenseContent = [];
     commonAjax({
-        url: '/rbac/license/detail',
+        url: 'license/detail',
         data: {
             uuid: licenseUuid
         },
@@ -78,7 +78,7 @@
             }
         }
     });
-    $('#downloadLicense').attr('href', '/rbac/license/download?uuid=' + licenseUuid);
+    $('#downloadLicense').attr('href', 'license/download?uuid=' + licenseUuid);
 
     var client = new ZeroClipboard(document.getElementById('copyLicense'));
     client.on("aftercopy", function () {

@@ -5,7 +5,7 @@ var commonAjax=function(opts) {
     var callback = opts.success;
     opts.success = function(result){
         if(result.code == 'login004') {
-            window.location.href = "/rbac/signin.html";
+            window.location.href = "signin.html";
         } else {
             callback(result);
         }

@@ -32,8 +32,8 @@ public class JpaDaoAspect {
     private AntPathMatcher matcher = new AntPathMatcher();
 
     private List<String> excludeURI = ImmutableList.of(
-            "/rbac/admin/**",
-            "/rbac/menu/show"
+            "/*/admin/**",
+            "/*/menu/show"
     ).asList();
 
     @Autowired

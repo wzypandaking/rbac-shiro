@@ -18,7 +18,7 @@
                     <section class="scrollable padder">
                         <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
                             <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
-                            <li><a href="#">设置</a></li>
+                            <li class="active">个人中心</li>
                             <li class="active">修改密码</li>
                         </ul>
                         <div class="row">
@@ -33,11 +33,11 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>密码：</label>
-                                                <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码" data-validation="server" data-validation-url="/rbac/user/checkPassword" >
+                                                <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码" data-validation="server" data-validation-url="user/checkPassword" >
                                             </div>
                                             <div class="form-group">
                                                 <label>确认密码：</label>
-                                                <input type="password" id="tpassword" name="password" class="form-control" placeholder="请再次输入密码" data-validation="server" data-validation-url="/rbac/user/checkPassword">
+                                                <input type="password" id="tpassword" name="password" class="form-control" placeholder="请再次输入密码" data-validation="server" data-validation-url="user/checkPassword">
                                             </div>
                                             <button type="submit" class="btn btn-sm btn-primary">保&nbsp;存</button>
                                         </form>
@@ -71,7 +71,7 @@
         } else {
             var submitData = $(this).serialize();
             $.ajax({
-                url :"/rbac/admin/change_password",
+                url :"admin/change_password",
                 data:submitData,
                 method:"post",
                 dataType:"json",

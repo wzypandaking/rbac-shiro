@@ -79,13 +79,13 @@
     <script>
         var groupUuid = getQueryString(window.location, 'uuid');
         if(groupUuid === null) {
-            window.location.href = '/rbac/groups.html';
+            window.location.href = 'groups.html';
         }
 
         $('input[name="uuid"]').val(groupUuid);
 
         commonAjax({
-            url:'/rbac/auth/group/item',
+            url:'auth/group/item',
             data:{
                 uuid: groupUuid
             },
@@ -118,7 +118,7 @@
         };
 
         commonAjax({
-            url : "/rbac/auth/group/choosedRules",
+            url : "auth/group/choosedRules",
             data:{
                 uuid: groupUuid
             },
@@ -173,7 +173,7 @@
                 btn:['确&nbsp;定', "再考虑一下"],
                 yes : function(){
                     commonAjax({
-                        url : '/rbac/auth/group/rules',
+                        url : 'auth/group/rules',
                         data:postdata,
                         type:'post',
                         dataType:'json',

@@ -51,7 +51,7 @@
         $.validate();
         $('form').submit(function(){
             commonAjax({
-                url :'/rbac/department/add',
+                url :'department/add',
                 data:$(this).serialize(),
                 dataType:'json',
                 type:'post',
@@ -69,7 +69,7 @@
     <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_USERS" logical="AND">
         <script>
             commonAjax({
-                url:'/rbac/department/users',
+                url:'department/users',
                 dataType:'json',
                 success:function(result){
                     var optList = [];

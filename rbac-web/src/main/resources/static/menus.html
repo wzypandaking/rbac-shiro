@@ -80,13 +80,13 @@
                                                         <td>
                                                             <div class="doc-buttons">
                                                                 <shiro:hasPermission values="RBAC_SYSTEM_MENU_ADD" logical="AND">
-                                                                <button onclick="addMenu(this)" data-target="/rbac/menu-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-primary" title="添加子权限"><i class="fa fa-plus text"></i></button>&nbsp;
+                                                                <button onclick="addMenu(this)" data-target="menu-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-primary" title="添加子权限"><i class="fa fa-plus text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_SYSTEM_MENU_EDIT" logical="AND">
-                                                                <button onclick="editMenu(this)" data-target="/rbac/menu-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
+                                                                <button onclick="editMenu(this)" data-target="menu-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_SYSTEM_MENU_DELETE" logical="AND">
-                                                                <button onclick="deleteMenu(this)" data-target="/rbac/menu/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                                <button onclick="deleteMenu(this)" data-target="menu/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                             </div>
                                                         </td>
@@ -145,7 +145,7 @@
         };
 
         commonAjax({
-            url : "/rbac/menu/list",
+            url : "menu/list",
             data:{},
             dataType:'json',
             success:function(result) {

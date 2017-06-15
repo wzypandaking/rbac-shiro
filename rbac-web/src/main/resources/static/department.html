@@ -73,15 +73,15 @@
                                                             <div class="doc-buttons">
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_ADD" logical="AND">
                                                                     {{if pid == 0 }}
-                                                                    <button onclick="addDepartment(this)" data-target="/rbac/department-add-parent.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-dark" title="添加上级部门"><i class="fa fa-plus text"></i><i class="fa fa-level-up text"></i></button>&nbsp;
+                                                                    <button onclick="addDepartment(this)" data-target="department-add-parent.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-dark" title="添加上级部门"><i class="fa fa-plus text"></i><i class="fa fa-level-up text"></i></button>&nbsp;
                                                                     {{/if}}
-                                                                    <button onclick="addDepartment(this)" data-target="/rbac/department-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-primary" title="添加子部门"><i class="fa fa-plus text"></i><i class="fa fa-level-down text"></i></button>&nbsp;
+                                                                    <button onclick="addDepartment(this)" data-target="department-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-primary" title="添加子部门"><i class="fa fa-plus text"></i><i class="fa fa-level-down text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_EDIT" logical="AND">
-                                                                    <button onclick="editDepartment(this)" data-target="/rbac/department-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
+                                                                    <button onclick="editDepartment(this)" data-target="department-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_DELETE" logical="AND">
-                                                                    <button onclick="deleteDepartment(this)" data-target="/rbac/department/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                                    <button onclick="deleteDepartment(this)" data-target="department/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                             </div>
                                                         </td>
@@ -138,7 +138,7 @@
         };
 
         commonAjax({
-            url : "/rbac/department/list",
+            url : "department/list",
             data:{},
             dataType:'json',
             success:function(result) {

@@ -51,7 +51,7 @@
         var departmentUuid = parent.document.getElementById("uuid").value;
         $('input[name="uuid"]').val(departmentUuid);
         commonAjax({
-            url:'/rbac/department/item',
+            url:'department/item',
             data:{
                 uuid:departmentUuid
             },
@@ -64,7 +64,7 @@
         $.validate();
         $('form').submit(function(){
             commonAjax({
-                url :'/rbac/department/edit',
+                url :'department/edit',
                 data:$(this).serialize(),
                 dataType:'json',
                 type:'post',
@@ -82,7 +82,7 @@
     <shiro:hasPermission values="RBAC_AUTHORITY_DEPARTMENT_USERS" logical="AND">
         <script>
             commonAjax({
-                url:'/rbac/department/users',
+                url:'department/users',
                 data:{
                     uuid:departmentUuid
                 },

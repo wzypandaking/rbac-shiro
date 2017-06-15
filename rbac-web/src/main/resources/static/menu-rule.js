@@ -7,7 +7,7 @@
  */
 function loadMenuRules(ruleName) {
     commonAjax({
-        url:'/rbac/rules/list',
+        url:'rules/list',
         dataType:'json',
         success:function (result) {
             if (!result.success) {

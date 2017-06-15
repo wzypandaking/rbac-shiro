@@ -76,13 +76,13 @@
                                                     <td>
                                                         <div class="doc-buttons">
                                                             <shiro:hasPermission values="RBAC_AUTHORITY_RULE_ADD" logical="AND">
-                                                            <button onclick="addRule(this)" data-target="/rbac/rule-add.html" data-uuid="{{item.uuid}}" data-name="{{item.name}}" class="btn btn-sm btn-primary" title="添加子权限"><i class="fa fa-plus text"></i></button>&nbsp;
+                                                            <button onclick="addRule(this)" data-target="rule-add.html" data-uuid="{{item.uuid}}" data-name="{{item.name}}" class="btn btn-sm btn-primary" title="添加子权限"><i class="fa fa-plus text"></i></button>&nbsp;
                                                             </shiro:hasPermission>
                                                             <shiro:hasPermission values="RBAC_AUTHORITY_RULE_EDIT" logical="AND">
-                                                            <button onclick="editRule(this)" data-target="/rbac/rule-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
+                                                            <button onclick="editRule(this)" data-target="rule-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                             </shiro:hasPermission>
                                                             <shiro:hasPermission values="RBAC_AUTHORITY_RULE_DELETE" logical="AND">
-                                                            <button onclick="deleteRule(this)" data-target="/rbac/rules/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                            <button onclick="deleteRule(this)" data-target="rules/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
                                                             </shiro:hasPermission>
                                                         </div>
                                                     </td>
@@ -142,7 +142,7 @@
         };
 
         commonAjax({
-            url : "/rbac/rules/list",
+            url : "rules/list",
             data:{},
             dataType:'json',
             success:function(result) {

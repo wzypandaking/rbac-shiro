@@ -38,7 +38,7 @@
                                                     <li><a href="#">Separated link</a></li>
                                                 </ul>
                                             </div>
-                                            <a href="javascript:" data-target="/rbac/license-add.html" id="addLicense" class="btn btn-sm btn-default"><i class="fa fa-plus"></i> 添加</a>
+                                            <a href="javascript:" data-target="license-add.html" id="addLicense" class="btn btn-sm btn-default"><i class="fa fa-plus"></i> 添加</a>
                                         </div>
                                         <div class="col-sm-4 m-b-xs">
                                             <div class="input-group">
@@ -98,7 +98,7 @@
                                                         <td>
                                                             <div class="doc-buttons">
                                                                 <shiro:hasPermission values="RBAC_VC_LICENSE_VIEW" logical="AND">
-                                                                <a href="/rbac/license-detail.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="查看license"><i class="fa fa-eye text"></i></a>&nbsp;
+                                                                <a href="license-detail.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="查看license"><i class="fa fa-eye text"></i></a>&nbsp;
                                                                 </shiro:hasPermission>
                                                             </div>
                                                         </td>
@@ -139,10 +139,10 @@
     <script>
         var versionUuid = getQueryString(location, "uuid");
         if (null ===  versionUuid || versionUuid.length === 0) {
-            window.location.href = '/rbac/version.html';
+            window.location.href = 'version.html';
         }
         commonAjax({
-            url : '/rbac/version/item',
+            url : 'version/item',
             data: {
                 uuid :versionUuid
             },
@@ -154,7 +154,7 @@
                     $('#uuid').val(versionUuid);
                 } else {
                     layer.alert(result.message, function(){
-                        window.location.href = '/rbac/version.html';
+                        window.location.href = 'version.html';
                     });
                 }
             }
@@ -175,7 +175,7 @@
 
         var loadLicense = function(page){
             commonAjax({
-                url : "/rbac/license/list",
+                url : "license/list",
                 data:{
                     versionUuid: versionUuid,
                     page : page
@@ -188,7 +188,7 @@
         };
 
         commonAjax({
-            url : "/rbac/license/list",
+            url : "license/list",
             data:{
                 versionUuid: versionUuid
             },
@@ -219,7 +219,7 @@
             var status = $(this).find('input:checked').val();
             console.log($(this).find('input:checked').val());
             commonAjax({
-                url : '/rbac/license/toggleStatus',
+                url : 'license/toggleStatus',
                 data : {
                     uuid : uuid,
                     status : status

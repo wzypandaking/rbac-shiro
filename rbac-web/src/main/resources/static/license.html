@@ -97,7 +97,7 @@
                                                             <td>
                                                                 <div class="doc-buttons">
                                                                     <shiro:hasPermission values="RBAC_VC_LICENSE_VIEW" logical="AND">
-                                                                    <a href="/rbac/license-detail.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="查看license"><i class="fa fa-eye text"></i></a>&nbsp;
+                                                                    <a href="license-detail.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="查看license"><i class="fa fa-eye text"></i></a>&nbsp;
                                                                     </shiro:hasPermission>
                                                                 </div>
                                                             </td>
@@ -141,7 +141,7 @@
     <shiro:hasPermission values="RBAC_VC_VERSION" logical="AND">
         <script>
             commonAjax({
-                url : '/rbac/version/listAll',
+                url : 'version/listAll',
                 dataType:'json',
                 success:function (result) {
                     if(!result.success) {
@@ -180,7 +180,7 @@
 
         var loadLicense = function(page){
             commonAjax({
-                url : "/rbac/license/list",
+                url : "license/list",
                 data: $('#searchForm').serialize() + "&page=" + page,
                 dataType:'json',
                 success:function(result) {
@@ -191,7 +191,7 @@
 
         function initPagePlugin() {
             commonAjax({
-                url : "/rbac/license/list",
+                url : "license/list",
                 data:$('#searchForm').serialize(),
                 dataType:'json',
                 success:function(result) {
@@ -209,7 +209,7 @@
             var status = $(this).find('input:checked').val();
             console.log($(this).find('input:checked').val());
             commonAjax({
-                url : '/rbac/license/toggleStatus',
+                url : 'license/toggleStatus',
                 data : {
                     uuid : uuid,
                     status : status

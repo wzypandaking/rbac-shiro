@@ -38,7 +38,7 @@
 
     function loadRules(uuid, callback) {
         commonAjax({
-            url:'/rbac/rules/item',
+            url:'rules/item',
             data:{
                 uuid: uuid
             },
@@ -58,7 +58,7 @@
     $.validate();
     $('form').submit(function(){
         commonAjax({
-            url :'/rbac/rules/edit',
+            url :'rules/edit',
             data:$(this).serialize(),
             dataType:'json',
             type:'post',

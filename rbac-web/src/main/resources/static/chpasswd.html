@@ -18,8 +18,8 @@
                     <section class="scrollable padder">
                         <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
                             <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
-                            <li><a href="#">设置</a></li>
-                            <li class="active" id="user_name">修改密码</li>
+                            <li><a href="users.html">用户管理</a></li>
+                            <li class="active" id="user_name"></li>
                             <li class="active">修改密码</li>
                         </ul>
                         <div class="row">
@@ -30,11 +30,11 @@
                                         <form role="form">
                                             <div class="form-group">
                                                 <label>密码：</label>
-                                                <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码" data-validation="server" data-validation-url="/rbac/user/checkPassword" >
+                                                <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码" data-validation="server" data-validation-url="user/checkPassword" >
                                             </div>
                                             <div class="form-group">
                                                 <label>确认密码：</label>
-                                                <input type="password" id="tpassword" name="password" class="form-control" placeholder="请再次输入密码" data-validation="server" data-validation-url="/rbac/user/checkPassword">
+                                                <input type="password" id="tpassword" name="password" class="form-control" placeholder="请再次输入密码" data-validation="server" data-validation-url="user/checkPassword">
                                             </div>
                                             <input type="hidden" name="uuid" id="uuid" value="{{uuid}}">
                                             <button type="submit" class="btn btn-sm btn-primary">保&nbsp;存</button>
@@ -62,13 +62,13 @@
     $('#uuid').val(uuid);
 
     commonAjax({
-        url:'/rbac/admin/profile',
+        url:'admin/profile',
         data:{
             uuid:  uuid
         },
         async:false,
         success:function (result) {
-            $('#user_name').html('<a href="/rbac/user_detail.html?uuid=' + uuid + '">' + result.data.username + '</a>');
+            $('#user_name').html('<a href=' + uuid + '"user-detail.html?uuid=">' + result.data.username + '</a>');
         }
     });
 
@@ -81,13 +81,13 @@
         } else {
             var submitData = $(this).serialize();
             $.ajax({
-                url :"/rbac/admin/change_password",
+                url :"admin/change_password",
                 data:submitData,
                 method:"post",
                 dataType:"json",
                 success:function(result) {
                     if(result.success) {
-                        window.location.href = "/rbac/users.html";
+                        window.location.href = "users.html";
                     } else {
                         layer.msg(result.message);
                     }

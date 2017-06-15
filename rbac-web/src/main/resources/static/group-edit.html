@@ -37,7 +37,7 @@
         var groupUuid = parent.document.getElementById("uuid").value;
         $('input[name="uuid"]').val(groupUuid);
         commonAjax({
-            url:'/rbac/auth/group/item',
+            url:'auth/group/item',
             data:{
                 uuid: groupUuid
             },
@@ -49,7 +49,7 @@
         $.validate();
         $('form').submit(function(){
             commonAjax({
-                url: '/rbac/auth/group/edit',
+                url: 'auth/group/edit',
                 data:$(this).serialize(),
                 type:'post',
                 dataType:'json',

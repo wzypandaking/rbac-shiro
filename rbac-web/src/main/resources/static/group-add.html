@@ -38,7 +38,7 @@
     $.validate();
     $('form').submit(function(){
         commonAjax({
-            url: '/rbac/auth/group/add',
+            url: 'auth/group/add',
             data:$(this).serialize(),
             type:'post',
             dataType:'json',

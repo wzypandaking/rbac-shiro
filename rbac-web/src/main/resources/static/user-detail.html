@@ -17,8 +17,8 @@
                     <section class="scrollable padder">
                         <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
                             <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
-                            <li class="active">设置</li>
-                            <li class="active">个人信息</li>
+                            <li><a href="users.html"> 账号管理</a></li>
+                            <li class="active">信息</li>
                         </ul>
                         <section class="scrollable wrapper">
                             <div class="row">
@@ -27,7 +27,7 @@
                                         <header class="panel-heading bg-danger lt no-border">
                                             <div class="clearfix">
                                                 <a href="#" class="pull-left thumb avatar b-3x m-r">
-                                                    <img src="/rbac/user/avatar?uuid={{uuid}}" class="img-circle" style="width: 58px;height: 58px;" id="avatar">
+                                                    <img src="user/avatar?uuid={{uuid}}" class="img-circle" style="width: 58px;height: 58px;" id="avatar">
                                                 </a>
                                                 <a href="#" class="pull-left thumb avatar b-3x m-r" style="z-index: 1000;position: absolute;left: 30px;" title="点击切换头像">
                                                     <div id="pictureBtn"></div>
@@ -35,7 +35,7 @@
                                                 <div class="clear">
                                                     <div class="h3 m-t-xs m-b-xs text-white"> {{profile.username}} </div>
                                                     <shiro:hasPermission values="RBAC_AUTHORITY_USER_CHPASSWD" logical="AND">
-                                                    <a href="/rbac/change_password.html?uuid={{uuid}}"><small class="text-muted">修改密码</small></a>
+                                                    <a href="chpasswd.html?uuid={{uuid}}"><small class="text-muted">修改密码</small></a>
                                                     </shiro:hasPermission>
                                                 </div>
                                             </div>
@@ -80,7 +80,7 @@
     });
     var authProfileTemplate = loadArtTemplate("auth_profile");
     commonAjax({
-        url:'/rbac/admin/profile',
+        url:'admin/profile',
         data:{
            uuid:  uuid
         },

@@ -17,7 +17,7 @@
                     <section class="scrollable padder">
                         <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
                             <li><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
-                            <li class="active">设置</li>
+                            <li class="active">个人中心</li>
                             <li class="active">个人信息</li>
                         </ul>
                         <section class="scrollable wrapper">
@@ -34,7 +34,7 @@
                                                 </a>
                                                 <div class="clear">
                                                     <div class="h3 m-t-xs m-b-xs text-white"> {{profile.username}} </div>
-                                                    <a href="/rbac/profile_change_password.html"><small class="text-muted">修改密码</small></a>
+                                                    <a href="profile-chpasswd.html"><small class="text-muted">修改密码</small></a>
                                                 </div>
                                             </div>
                                         </header>
@@ -84,7 +84,7 @@
     });
     var authProfileTemplate = loadArtTemplate("auth_profile");
     commonAjax({
-        url:'/rbac/admin/profile',
+        url:'admin/profile',
         async:false,
         success:function (result) {
             var render = template.compile(authProfileTemplate);

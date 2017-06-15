@@ -72,8 +72,8 @@
                                                         <td>
                                                             <ul class="nav navbar-nav navbar-left hidden-xs nav-user">
                                                                 <li>
-                                                                    <a href="/rbac/user_detail.html?uuid={{item.uuid}}" class="dropdown-toggle" >
-                                                                    <span class="thumb-sm avatar pull-left"><img src="/rbac/user/avatar?uuid={{item.uuid}}" style="width: 28px;height: 28px"></span>{{item.username}}
+                                                                    <a href="user-detail.html?uuid={{item.uuid}}" class="dropdown-toggle" >
+                                                                    <span class="thumb-sm avatar pull-left"><img src="user/avatar?uuid={{item.uuid}}" style="width: 28px;height: 28px"></span>{{item.username}}
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -151,7 +151,7 @@
 
         var loadUsers = function(page){
             commonAjax({
-                url : "/rbac/user/list",
+                url : "user/list",
                 data:{
                     page : page
                 },
@@ -163,7 +163,7 @@
         };
 
         commonAjax({
-            url : "/rbac/user/list",
+            url : "user/list",
             data:{},
             dataType:'json',
             success:function(result) {
@@ -178,7 +178,7 @@
             var status = $(this).find('input:checked').val();
             console.log($(this).find('input:checked').val());
             commonAjax({
-                url : '/rbac/user/toggleStatus',
+                url : 'user/toggleStatus',
                 data : {
                     uuid : uuid,
                     status : status

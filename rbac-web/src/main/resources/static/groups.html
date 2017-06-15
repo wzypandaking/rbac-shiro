@@ -69,18 +69,18 @@
                                                         <td>
                                                             <div class="doc-buttons">
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_EDIT" logical="AND">
-                                                                <button onclick="editGroup(this)" data-target="/rbac/group-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
+                                                                <button onclick="editGroup(this)" data-target="group-edit.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-warning" title="修改"><i class="fa fa-wrench text"></i></button>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_DELETE" logical="AND">
                                                                 {{if item.type != 1}}
-                                                                <button onclick="deleteGroup(this)" data-target="/rbac/auth/group/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
+                                                                <button onclick="deleteGroup(this)" data-target="auth/group/delete?uuid={{item.uuid}}" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash-o text"></i></button>&nbsp;
                                                                 {{/if}}
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_RULES" logical="AND">
-                                                                <a href="/rbac/group-rules.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="分配权限"><i class="fa fa-lock text"></i></a>&nbsp;
+                                                                <a href="group-rules.html?uuid={{item.uuid}}" class="btn btn-sm btn-primary" title="分配权限"><i class="fa fa-lock text"></i></a>&nbsp;
                                                                 </shiro:hasPermission>
                                                                 <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_USERS" logical="AND">
-                                                                <button onclick="addGroupUser(this)" data-target="/rbac/group-user-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-info" title="添加成员"><i class="fa fa-male text"></i></button>
+                                                                <button onclick="addGroupUser(this)" data-target="group-user-add.html" data-uuid="{{item.uuid}}" class="btn btn-sm btn-info" title="添加成员"><i class="fa fa-male text"></i></button>
                                                                 </shiro:hasPermission>
                                                             </div>
                                                         </td>
@@ -134,7 +134,7 @@
 
         var loadGroups = function(page){
             commonAjax({
-                url : "/rbac/auth/group/list",
+                url : "auth/group/list",
                 data:{
                     page : page
                 },
@@ -146,7 +146,7 @@
         };
 
         commonAjax({
-            url : "/rbac/auth/group/list",
+            url : "auth/group/list",
             data:{},
             dataType:'json',
             success:function(result) {

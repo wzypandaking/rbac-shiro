@@ -69,7 +69,7 @@
                                                         <td>
                                                             <div class="doc-buttons">
                                                                 <shiro:hasPermission values="RBAC_VC_LICENSE_VIEW" logical="AND">
-                                                                <a href="/rbac/version-license.html?uuid={{item.uuid}}" class="btn btn-sm btn-info" title="license管理"><i class="fa fa-file-text text"></i></a>&nbsp;
+                                                                <a href="version-license.html?uuid={{item.uuid}}" class="btn btn-sm btn-info" title="license管理"><i class="fa fa-file-text text"></i></a>&nbsp;
                                                                 </shiro:hasPermission>
                                                             </div>
                                                         </td>
@@ -121,7 +121,7 @@
 
         var loadVersion = function(page){
             commonAjax({
-                url : "/rbac/version/list",
+                url : "version/list",
                 data:{
                     page : page
                 },
@@ -133,7 +133,7 @@
         };
 
         commonAjax({
-            url : "/rbac/version/list",
+            url : "version/list",
             data:{},
             dataType:'json',
             success:function(result) {

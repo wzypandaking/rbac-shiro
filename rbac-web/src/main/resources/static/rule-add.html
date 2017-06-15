@@ -50,7 +50,7 @@
     $.validate();
     $('form').submit(function(){
         commonAjax({
-            url :'/rbac/rules/add',
+            url :'rules/add',
             data:$(this).serialize(),
             dataType:'json',
             type:'post',

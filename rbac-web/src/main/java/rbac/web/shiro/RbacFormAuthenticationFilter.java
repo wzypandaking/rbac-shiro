@@ -19,8 +19,8 @@ public class RbacFormAuthenticationFilter extends FormAuthenticationFilter {
     private AntPathMatcher matcher = new AntPathMatcher();
 
     public RbacFormAuthenticationFilter() {
-        excludeURI.add("/rbac/admin/**");
-        excludeURI.add("/rbac/client/api/**");
+        excludeURI.add("/*/admin/**");
+        excludeURI.add("/*/client/api/**");
     }
 
 
