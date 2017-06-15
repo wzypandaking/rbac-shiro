@@ -8,8 +8,8 @@ $mysql = mysql_connect("127.0.0.1:3306","root", "");
 mysql_select_db("auth");
 mysql_query("set names utf8");
 
-$permissionName = $argv[1];
-if(! $permissionName || ! preg_match("/^[a-z|A-Z]{1,}$/", $permissionName)) {
+$permissionPrefix = $argv[1];
+if(! $permissionPrefix || ! preg_match("/^[a-z|A-Z]{1,}$/", $permissionPrefix)) {
     exit("请输入权限名称");
 }
 
@@ -18,8 +18,12 @@ if(! $licenseKey) {
     exit("请输入 License Key");
 }
 
+$externalPaths = [
+    "../spring-boot-rbac-shiro/"
+];
+
 function buildLicenseKey() {
-    global $licenseKey;
+    global $licenseKey, $externalPaths;
     $result = mysql_query("select license,public_key,expire_time  from admin_version_license where uuid='$licenseKey'");
     $license = mysql_fetch_assoc($result);
     if(!$license) {
@@ -29,13 +33,15 @@ function buildLicenseKey() {
         exit("License Key 已过期");
     }
     $licenseContent = "{$license[license]}\r\n$license[public_key]";
-    file_put_contents("../spring-boot-rbac-shiro/src/main/resources/rbac.lic", $licenseContent);
+    foreach($externalPaths as $path) {
+        file_put_contents($path . "src/main/resources/rbac.lic", $licenseContent);
+    }
 }
 
-// todo 这个地方有问题，不能使用 rbac
 function buildPermissionRules() {
+    global $permissionPrefix, $externalPaths;
     global $permissionJavaTemplate, $permissionXsdTemplate;
-    $result = mysql_query("select name, title from admin_auth_rule where `name` like 'rbac%'");
+    $result = mysql_query("select name, title from admin_auth_rule where `name` like '$permissionPrefix%'");
     $permissionJava = array();
     $permissionXsd = array();
     while($rule = mysql_fetch_assoc($result)) {
@@ -44,13 +50,16 @@ function buildPermissionRules() {
         $permissionJava[] = $permission . '("'. $rule['name'] .'", "'. $description .'"),';
         $permissionXsd[] = '<xsd:enumeration value="' . $permission . '"/>';
     }
-
-    file_put_contents("../spring-boot-rbac-shiro/src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, implode($permissionJava, "\r\n\t")));
-    file_put_contents("../spring-boot-rbac-shiro/src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, implode($permissionXsd, "\r\n\t\t\t")));
+    foreach($externalPaths as $path) {
+        file_put_contents($path . "src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, implode($permissionJava, "\r\n\t")));
+        file_put_contents($path . "src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, implode($permissionXsd, "\r\n\t\t\t")));
+    }
 }
 
 buildLicenseKey();
 buildPermissionRules();
 
-chdir("../spring-boot-rbac-shiro");
-system("mvn clean install -Dmaven.test.skip");
+foreach($externalPaths as $path) {
+    chdir($path);
+    system("mvn clean install -Dmaven.test.skip");
+}

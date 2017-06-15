@@ -6,7 +6,7 @@ include_once './Template.php';
 $mysql = mysql_connect("127.0.0.1:3306","root", "");
 mysql_select_db("auth");
 mysql_query("set names utf8");
-$result = mysql_query("select name, title from admin_auth_rule where `name` like creator=1);
+$result = mysql_query("select name, title from admin_auth_rule where `name` like creator=1");
 
 
 $permissionJava = array();
