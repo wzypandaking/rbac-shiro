@@ -61,8 +61,8 @@
 
 ># 二、部署篇
 >   ## 1、初始化数据
->       2、mysql -uroot -p
->       3、source ./install/auth.sql
+>       1、mysql -uroot -p
+>       2、source ./install/auth.sql
 >   ## 2、部署
 >       1、cd install
 >       2、./startup.sh
