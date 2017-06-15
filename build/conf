@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# 项目路径
+RBAC_HOME=$(pwd)/..
+# 编译路径
+BUILD_HOME=$RBAC_HOME/build
+# 配置文件名次
+CONFIG_NAME=application-prod.properties
+# 配置文件目录
+CONFIG_PATH=$RBAC_HOME/rbac-web/src/main/resources/config
+# pid 生成地址
+PID_HOME=$BUILD_HOME/.rbac
+# pid名次
+PID_NAME=rbac.pid
+
+# 打出的jar包名次
+TARGET=$RBAC_HOME/rbac-web/target/rbac-web-1.0-SNAPSHOT.jar
+# 生产环境目录（构建完成后，jar包的启动目录）
+JAR_HOME=$BUILD_HOME/.rbac
+JAR_NAME=rbacshiro.jar
