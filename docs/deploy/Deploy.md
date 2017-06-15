@@ -71,7 +71,9 @@
 >       2、系统会初始化2个账号
 >           a、账号：admin  密码：1234qwer     (拥有最高权限)
 >           b、账号：test_001  密码：1qa2ws    (测试账号)
-
+>   ## 4、停止应用
+>       1、cd ./build
+>       2、./stop.sh
 
 # 发布第三方权限依赖
 *   [Spring Boot](SpringBoot.md)
