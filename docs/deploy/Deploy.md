@@ -11,6 +11,7 @@
 >       ./install/build.sh      #   打包并部署
 >       ./install/stop.sh       #   停止系统运行
 >##1、脚本配置
+>
 >		# 项目路径
 >		RBAC_HOME=$(pwd)/..
 >		# 编译路径
@@ -29,7 +30,8 @@
 >		JAR_HOME=$BUILD_HOME/.rbac      
 >		JAR_NAME=rbacshiro.jar
 >
->##2、应用配置：application-prod.propertiex
+>##2、应用配置：application-prod.properties
+>
 >		#应用占用的端口号
 >		server.port=8081
 >		#应用启动的访问路径
