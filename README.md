@@ -20,8 +20,8 @@
 >   *   [菜单](docs/Menu.md)
 >   *   [序列号](docs/License.md)
 >
->   **业务系统对接**
->   *   [对接文档](docs/deploy/Deploy.md)
+>   **系统部署**
+>   *   [部署文档](docs/deploy/Deploy.md)
 ## 未来
 >   * 提供Dubbo方式 
 >   * 提供Zookeeper方式
