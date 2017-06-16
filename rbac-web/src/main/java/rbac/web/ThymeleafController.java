@@ -14,8 +14,7 @@ import rbac.RbacPermissions;
 public class ThymeleafController {
 
     @RequestMapping(value = "{template}.html", method = RequestMethod.GET)
-    public String show(@PathVariable String template, Model model) {
-        model.addAttribute("RbacPermissions", RbacPermissions.class);
+    public String show(@PathVariable String template) {
         return String.format("%s", template);
     }
 
