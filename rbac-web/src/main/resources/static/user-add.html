@@ -45,15 +45,23 @@
                                 </div>
                                 <div class="step-pane" id="step2">
                                     <form>
-                                        <div>
+                                        <div class="form-group">
                                             <p>头像:</p>
-                                            <input type="file" name="avatar" class="form-control" placeholder="上传头像">
+                                            <div class="btn-group">
+                                                <a href="#" class="pull-left thumb avatar b-3x m-r">
+                                                    <img src="images/avatar.jpg" class="img-circle" style="width: 58px;height: 58px;" id="avatar">
+                                                </a>
+                                                <a href="#" class="pull-left thumb avatar b-3x m-r" style="z-index: 1000;position: absolute;left: 0px;" title="点击切换头像">
+                                                    <div id="pictureBtn"></div>
+                                                </a>
+                                                <input type="hidden" name="avatar" value="" id="uploadAvatar">
+                                            </div>
                                         </div>
-                                        <div>
+                                        <div class="form-group">
                                             <p>邮箱<a href="javascript:" data-toggle="tooltip" data-placement="top" data-original-title="用于找回密码">?</a>:</p>
                                             <input type="text" name="email" autocomplete="off" class="form-control" placeholder="邮箱" data-validation="server" data-validation-url="user/checkEmail">
                                         </div>
-                                        <div>
+                                        <div class="form-group">
                                             <p>手机号<a href="javascript:" data-toggle="tooltip" data-placement="top" data-original-title="用于找回密码">?</a>:</p>
                                             <input type="text" name="phone" autocomplete="off" class="form-control" placeholder="手机号" data-validation="server" data-validation-url="user/checkMobile">
                                         </div>
@@ -74,100 +82,120 @@
 </section>
 <script th:replace="template/js"></script>
 <shiro:hasPermission values="RBAC_AUTHORITY_USER_ADD" logical="AND">
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
-<script>
-    var $dependency = $('#form-wizard');
-    var $form = $dependency.find('form');
-    var $stepBody = $dependency.find('div.step-pane');
-    var $stepHeader = $dependency.find('ul.steps');
-    var $stepButton = $dependency.find('div.actions').find('button');
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+    <script src="uploadify/jquery.uploadify.min.js"></script>
 
-    var step = 0;
-    var goPosition;
-    var maxStep = $form.length - 1;
-
-    $.validate({
-        modules : 'security',
-        onSuccess:function(){
-            doStep(goPosition);
-        }
-    });
-
-    $form.submit(function(){
-        return false;
-    });
-
-    $stepButton.eq(2).click(function(){
-        if(step != maxStep) {
-            return;
-        }
-        var postData = [];
-        for(var i =0; i <= maxStep; i ++) {
-            postData.push($form.eq(i).serialize());
-        }
-        commonAjax({
-            url :   'user/add',
-            data:   postData.join('&'),
-            type :  'post',
-            dateType:'json',
-            success:function(result) {
-                if(result.success) {
-                    window.parent.location.reload();
-                } else {
-                    layer.msg(result.message);
-                }
+    <script>
+        $('#pictureBtn').uploadify({
+            swf: 'uploadify/uploadify.swf',
+            uploader : 'admin/profile/avatar',
+            buttonText:'',
+            multi:false,
+            height:58,
+            width:58,
+            onUploadError:function (file, errorCode, errorMsg, errorString) {
+                layer.alert("上传失败");
+            },
+            onUploadSuccess:function (file, data, response) {
+                $("#uploadAvatar").val($.parseJSON(data).data);
+                $('#avatar').attr('src', "admin/files?filename=" + $.parseJSON(data).data);
             }
         });
-    });
+    </script>
 
-    $stepButton.click(function() {
-        goPosition = $(this).index();
-        $form.eq(step).submit();
-    });
+    <script>
+        var $dependency = $('#form-wizard');
+        var $form = $dependency.find('form');
+        var $stepBody = $dependency.find('div.step-pane');
+        var $stepHeader = $dependency.find('ul.steps');
+        var $stepButton = $dependency.find('div.actions').find('button');
 
+        var step = 0;
+        var goPosition;
+        var maxStep = $form.length - 1;
 
-    doStep = function(position){
-        $stepBody.removeClass('active');
-        $stepButton.removeAttr("disabled");
+        $.validate({
+            modules : 'security',
+            onSuccess:function(){
+                doStep(goPosition);
+            }
+        });
 
-        $stepHeader.find('li').removeClass('active');
-        $stepHeader.find('li>span').removeClass('active');
-        $stepHeader.find('li>span.badge').removeClass('badge-success');
-        $stepHeader.find('li>span.badge').removeClass('badge-info');
+        $form.submit(function(){
+            return false;
+        });
 
-        switch(position) {
-            case 0:
-                -- step;
-                if(step <= 0) {
-                    step = 0;
+        $stepButton.eq(2).click(function(){
+            if(step != maxStep) {
+                return;
+            }
+            var postData = [];
+            for(var i =0; i <= maxStep; i ++) {
+                postData.push($form.eq(i).serialize());
+            }
+            commonAjax({
+                url :   'user/add',
+                data:   postData.join('&'),
+                type :  'post',
+                dateType:'json',
+                success:function(result) {
+                    if(result.success) {
+                        window.parent.location.reload();
+                    } else {
+                        layer.msg(result.message);
+                    }
                 }
-                break;
-            case 1:
-                ++ step;
-                if(step >= maxStep) {
-                    step = maxStep;
-                }
-                break;
+            });
+        });
+
+        $stepButton.click(function() {
+            goPosition = $(this).index();
+            $form.eq(step).submit();
+        });
+
+
+        doStep = function(position){
+            $stepBody.removeClass('active');
+            $stepButton.removeAttr("disabled");
+
+            $stepHeader.find('li').removeClass('active');
+            $stepHeader.find('li>span').removeClass('active');
+            $stepHeader.find('li>span.badge').removeClass('badge-success');
+            $stepHeader.find('li>span.badge').removeClass('badge-info');
+
+            switch(position) {
+                case 0:
+                    -- step;
+                    if(step <= 0) {
+                        step = 0;
+                    }
+                    break;
+                case 1:
+                    ++ step;
+                    if(step >= maxStep) {
+                        step = maxStep;
+                    }
+                    break;
+            }
+
+            $stepBody.eq(step).addClass('active');
+            $stepHeader.find('li:eq(' + step + ')').addClass('active');
+            $stepHeader.find('li>span.badge:eq(' + step + ')').addClass('badge-info');
+            for(var i = 0;i <= step - 1; i ++) {
+                $dependency.find('li>span.badge:eq(' + i + ')').addClass('badge-success');
+            }
+
+            $stepButton.eq(2).hide();
+            $stepButton.eq(1).show();
+            if(step == 0) {
+                $stepButton.eq(0).attr("disabled", "disabled");
+            } else if(step == maxStep) {
+                $stepButton.eq(1).attr('disabled', 'disabled').hide();
+                $stepButton.eq(2).show();
+            }
         }
 
-        $stepBody.eq(step).addClass('active');
-        $stepHeader.find('li:eq(' + step + ')').addClass('active');
-        $stepHeader.find('li>span.badge:eq(' + step + ')').addClass('badge-info');
-        for(var i = 0;i <= step - 1; i ++) {
-            $dependency.find('li>span.badge:eq(' + i + ')').addClass('badge-success');
-        }
-
-        $stepButton.eq(2).hide();
-        $stepButton.eq(1).show();
-        if(step == 0) {
-            $stepButton.eq(0).attr("disabled", "disabled");
-        } else if(step == maxStep) {
-            $stepButton.eq(1).attr('disabled', 'disabled').hide();
-            $stepButton.eq(2).show();
-        }
-    }
-
-</script>
+    </script>
 </shiro:hasPermission>
 </body>
 </html>

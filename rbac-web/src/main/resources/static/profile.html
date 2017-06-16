@@ -65,16 +65,11 @@
         </section>
     </section>
 </section>
-
-
-<script src="js/app.v2.js"></script> <!-- Bootstrap --> <!-- App -->
-<script src="layui/lay/dest/layui.all.js" cache="false"></script>
+<script th:replace="template/js"></script>
 <script src="js/charts/easypiechart/jquery.easy-pie-chart.js" cache="false"></script>
 <script src="js/charts/sparkline/jquery.sparkline.min.js" cache="false"></script>
 <script src="uploadify/jquery.uploadify.min.js"></script>
-<script src="template-web.js"></script>
 
-<script src="base.js"></script>
 <script src="menu.js"></script>
 <script>
     $(document).on('click', '.setting', function () {
@@ -105,7 +100,20 @@
             layer.alert("上传失败");
         },
         onUploadSuccess:function (file, data, response) {
-            window.location.reload();
+            commonAjax({
+                url:'admin/avatar/save',
+                data:{
+                    avatar:$.parseJSON(data).data
+                },
+                dataType:'json',
+                success:function(result){
+                    if(result.success) {
+                        window.location.reload();
+                    } else {
+                        layer.alert("保存失败!");
+                    }
+                }
+            });
         }
     });
 </script>

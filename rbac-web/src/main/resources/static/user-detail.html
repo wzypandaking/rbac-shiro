@@ -105,7 +105,21 @@
             layer.alert("上传失败");
         },
         onUploadSuccess:function (file, data, response) {
-            window.location.reload();
+            commonAjax({
+                url:'admin/avatar/save',
+                data:{
+                    uuid:uuid,
+                    avatar:$.parseJSON(data).data
+                },
+                dataType:'json',
+                success:function(result){
+                    if(result.success) {
+                        window.location.reload();
+                    } else {
+                        layer.alert("保存失败!");
+                    }
+                }
+            });
         }
     });
 </script>

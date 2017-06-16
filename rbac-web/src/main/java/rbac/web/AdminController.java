@@ -6,7 +6,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +18,7 @@ import rbac.dao.AdminUsersDao;
 import rbac.dao.repository.AdminUsers;
 import rbac.service.AdminDepartmentService;
 import rbac.service.AdminUsersService;
+import rbac.service.UploadService;
 import rbac.utils.BeanUtil;
 import rbac.utils.Result;
 import rbac.web.lang.AdminUsersLang;
@@ -30,7 +30,7 @@ import rbac.web.vo.ProfileManageVO;
 import rbac.web.vo.ProfileVO;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,17 +44,21 @@ import java.util.Set;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-
-    @Value("${upload.path}")
-    private String uploadPath;
-
     @Autowired
     private AdminUsersService adminUsersService;
     @Autowired
     private AdminUsersDao adminUsersDao;
     @Autowired
     private AdminDepartmentService adminDepartmentService;
+    @Autowired
+    private UploadService uploadService;
 
+    /**
+     * 登录
+     * @param param
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public Result login(LoginParam param, HttpServletRequest request) {
@@ -85,6 +89,11 @@ public class AdminController {
         return Result.wrapResult(LoginLang.SUCCESS);
     }
 
+    /**
+     * 加载头像信息
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "user")
     @ResponseBody
     public Result<ProfileVO> user(HttpServletRequest request) {
@@ -92,6 +101,12 @@ public class AdminController {
         return Result.wrapResult(BeanUtil.copy(adminUsers, ProfileVO.class));
     }
 
+    /**
+     * 加载用户信息
+     * @param uuid
+     * @param request
+     * @return
+     */
     @RequestMapping("profile")
     @ResponseBody
     public Result<ProfileManageVO> profile(String uuid, HttpServletRequest request) {
@@ -104,6 +119,12 @@ public class AdminController {
         return Result.wrapResult(BeanUtil.copy(adminUsers, ProfileManageVO.class));
     }
 
+    /**
+     * 更换密码
+     * @param password
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "change_password", method = RequestMethod.POST)
     @ResponseBody
     public Result changePassword(UserChangePassword password, HttpServletRequest request) {
@@ -131,6 +152,11 @@ public class AdminController {
         return adminUsersService.changePassword(user, password.getPassword().get(1));
     }
 
+    /**
+     * 加载头像信息
+     * @param request
+     * @return
+     */
     @RequestMapping("avatar")
     public byte[] loadAvatar(HttpServletRequest request) {
         Long id = (Long) request.getSession().getAttribute("id");
@@ -138,51 +164,63 @@ public class AdminController {
         return adminUsersService.getUserAvatar(adminUsers);
     }
 
+    /**
+     * 保存头像
+     * @param avatar
+     * @param uuid
+     * @return
+     */
+    @RequestMapping("avatar/save")
+    @ResponseBody
+    public Result saveAvatar(String avatar, String uuid) {
+        AdminUsers user;
+        if (StringUtils.isNotEmpty(uuid)) {
+            user = adminUsersDao.findByUuid(uuid);
+        } else {
+            HttpServletRequest r = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            user = adminUsersDao.findById((Long) r.getSession().getAttribute("id"));
+        }
+        if (user == null) {
+            throw new RuntimeException("没有找到用户信息");
+        }
+        user.setAvatar(avatar);
+        adminUsersDao.save(user);
+        return Result.wrapResult(SystemLang.SUCCESS);
+    }
+
+    /**
+     * 上传头像
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "profile/avatar", method = RequestMethod.POST)
     @ResponseBody
     public Result profileAvatar(MultipartRequest request) {
         MultipartFile multipartFile = request.getFile("Filedata");
-        String folderName = String.format("%s/avatar", uploadPath);
-        // 创建folder
-        {
-            File folder = new File(folderName);
-            if (!folder.exists() || !folder.isDirectory()) {
-                if (!folder.mkdirs()) {
-                    log.error("创建文件夹失败 {}", folderName);
-                    return Result.wrapResult(SystemLang.ERROR);
-                }
-            }
-        }
-        String filename = String.format("%s/%s_%s", folderName, System.currentTimeMillis(), multipartFile.getOriginalFilename());
-        File file = new File(filename);
-        byte data[];
+        String filename = String.format("%s_%s", System.currentTimeMillis(), multipartFile.getOriginalFilename());
+        Result result = Result.wrapResult(SystemLang.ERROR);
         try {
-            InputStream stream = new BufferedInputStream(multipartFile.getInputStream());
-            data = new byte[stream.available()];
-            stream.read(data);
-            stream.close();
-
-            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
-            outputStream.write(data);
-            outputStream.flush();
-            outputStream.close();
-
-            {
-                HttpServletRequest r = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-                AdminUsers user =  adminUsersDao.findById((Long)r.getSession().getAttribute("id"));
-                if (user == null) {
-                    throw new RuntimeException("没有找到用户信息");
-                }
-                user.setAvatar(filename);
-                adminUsersDao.save(user);
-            }
-        } catch (Exception e) {
-            return Result.wrapResult(SystemLang.ERROR);
+            result = adminUsersService.saveUserAvatar(filename, multipartFile.getInputStream());
+        } catch (IOException e) {
+            log.error("上传头像失败", e);
         }
-        return Result.wrapResult("admin/avatar");
+        return result;
     }
 
+    @RequestMapping(value = "files")
+    public byte[] getUploadFile(String filename){
+        try {
+            return uploadService.getUploadFile(filename);
+        } catch (Exception e) {
+            return new byte[0];
+        }
+    }
 
+    /**
+     * 退出
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "logout")
     @ResponseBody
     public Result logout(HttpServletRequest request) {

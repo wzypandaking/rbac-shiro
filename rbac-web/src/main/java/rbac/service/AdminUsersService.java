@@ -1,8 +1,7 @@
 package rbac.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -10,10 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import rbac.dao.AdminAuthGroupDao;
 import rbac.dao.AdminUsersDao;
 import rbac.dao.repository.AdminAuthGroup;
-import rbac.dao.repository.AdminAuthGroupAccess;
 import rbac.dao.repository.AdminAuthRule;
 import rbac.dao.repository.AdminUsers;
 import rbac.utils.*;
@@ -27,8 +24,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 
@@ -38,10 +33,9 @@ import java.util.*;
  * @note: 请补充说明
  * @history:
  */
+@Slf4j
 @Component
 public class AdminUsersService {
-
-    private Logger logger = LoggerFactory.getLogger(AdminUsersService.class);
 
     @Autowired
     private AdminUsersDao adminUsersDao;
@@ -51,26 +45,34 @@ public class AdminUsersService {
     private AdminAuthGroupAccessService adminAuthGroupAccessService;
     @Autowired
     private AdminAuthRuleService adminAuthRuleService;
+    @Autowired
+    private UploadService uploadService;
 
     public byte[] getUserAvatar(AdminUsers user) {
+        if (StringUtils.isNotEmpty(user.getAvatar())) {
+            try {
+                return uploadService.getUploadFile(user.getAvatar());
+            } catch (Exception e) {
+                //  没有找到头像
+            }
+        }
         try {
-            InputStream stream;
-            File file = null;
-            if (StringUtils.isNotEmpty(user.getAvatar())) {
-                 file = new File(user.getAvatar());
-            }
-            if (file != null && file.isFile() && file.exists()) {
-                stream = new FileInputStream(file);
-            } else {
-                ClassPathResource resource = new ClassPathResource("static/images/avatar.jpg");
-                stream = resource.getInputStream();
-            }
+            ClassPathResource resource = new ClassPathResource("static/images/avatar.jpg");
+            InputStream stream = resource.getInputStream();
             byte[] data = new byte[stream.available()];
             stream.read(data);
             return data;
         } catch (Exception e) {
             throw new RuntimeException("文件头像没有找到");
         }
+    }
+
+    public Result saveUserAvatar(String filename, InputStream fileInputStream) {
+        filename = String.format("avatar/%s", filename);
+        if (uploadService.saveUploadFile(filename, fileInputStream)) {
+            return Result.wrapResult(filename);
+        }
+        return Result.wrapResult(SystemLang.ERROR);
     }
 
     /**
@@ -92,7 +94,7 @@ public class AdminUsersService {
     public AdminUsers checkUserAndPassword(String username, String password) {
         AdminUsers adminUsers = adminUsersDao.findByUsername(username);
         if (adminUsers == null) {
-            logger.error("没有找到用户 username:{}, password{}", username, password);
+            log.error("没有找到用户 username:{}, password{}", username, password);
             return null;
         }
         if (!adminUsers.getPassword().equals(buildPassword(password, adminUsers.getSalt()))) {
