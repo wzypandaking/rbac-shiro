@@ -2,7 +2,6 @@ package rbac.dao;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.stereotype.Repository;
 import rbac.dao.repository.AdminUsers;
 
 import java.util.Collection;
@@ -25,4 +24,6 @@ public interface AdminUsersDao extends PagingAndSortingRepository<AdminUsers, Lo
     List<AdminUsers> findByUuidIn(Collection<String> uuid);
 
     AdminUsers findByEmail(String email);
+
+    AdminUsers findByPhone(String phone);
 }

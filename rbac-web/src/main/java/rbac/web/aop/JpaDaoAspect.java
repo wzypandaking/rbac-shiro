@@ -33,7 +33,11 @@ public class JpaDaoAspect {
 
     private List<String> excludeURI = ImmutableList.of(
             "/*/admin/**",
-            "/*/menu/show"
+            "/*/menu/show",
+            "/*/user/add",
+            "/*/user/checkUsername",
+            "/*/user/checkEmail",
+            "/*/user/checkMobile"
     ).asList();
 
     @Autowired

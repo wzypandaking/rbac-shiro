@@ -215,6 +215,12 @@ public class UserController {
             object.put("message", "手机号格式不正确");
             return object;
         }
+        AdminUsers user = adminUsersDao.findByPhone(phone);
+        if (user != null) {
+            object.put("valid", false);
+            object.put("message", "手机号已存在");
+            return object;
+        }
         object.put("valid", true);
         object.put("message", "验证通过");
         return object;

@@ -144,7 +144,11 @@
     <script>
         $('#addRule').click(function(){
             $('input[name="uuid"]').val('');
-            openWindow($(this).data('target'));
+            layer.open({
+                type:2,
+                content:[$(this).data('target'), 'no'],
+                area:['400px', '300px']
+            });
         });
 
         function addRule(_self) {
@@ -152,7 +156,7 @@
             $('input[name="name"]').val($(_self).data('name'));
             layer.open({
                 type:2,
-                content:[target, 'no'],
+                content:[$(_self).data('target'), 'no'],
                 area:['400px', '300px']
             });
         }
