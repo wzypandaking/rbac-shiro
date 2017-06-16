@@ -25,29 +25,9 @@
                                 <header class="header bg-white b-b clearfix">
                                     <div class="row m-t-sm">
                                         <div class="col-sm-8 m-b-xs">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
-                                                <button type="button" class="btn btn-sm btn-default" title="Remove"><i class="fa fa-trash-o"></i></button>
-                                                <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href="#">Action</a></li>
-                                                    <li><a href="#">Another action</a></li>
-                                                    <li><a href="#">Something else here</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="#">Separated link</a></li>
-                                                </ul>
-                                            </div>
                                             <shiro:hasPermission values="RBAC_AUTHORITY_GROUP_ADD" logical="AND">
                                             <a href="javascript:" data-target="group-add.html" id="addGroup" class="btn btn-sm btn-default"><i class="fa fa-plus"></i> 添加</a>
                                             </shiro:hasPermission>
-                                        </div>
-                                        <div class="col-sm-4 m-b-xs">
-                                            <div class="input-group">
-                                                <input type="text" class="input-sm form-control" placeholder="Search">
-                                                <span class="input-group-btn">
-                                                <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                                </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </header>
