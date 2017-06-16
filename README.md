@@ -1,5 +1,5 @@
 # Rbac Shiro
-[*Rbac Shiro*](http://47.94.129.189/rbac)
+[*Rbac Shiro*](http://www.rbacshiro.com/rbac)
 是一个基于**spring-boot**和**shiro**的**分布式**权限管理系统。
 旨在将**权限系统**和**业务系统**分离。
 
