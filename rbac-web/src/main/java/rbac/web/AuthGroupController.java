@@ -5,21 +5,17 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.Logical;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import rbac.RbacPermissions;
-import rbac.dao.AdminAuthGroupAccessDao;
 import rbac.dao.AdminAuthGroupDao;
 import rbac.dao.AdminAuthRuleDao;
 import rbac.dao.AdminUsersDao;
 import rbac.dao.repository.AdminAuthGroup;
-import rbac.dao.repository.AdminAuthGroupAccess;
 import rbac.dao.repository.AdminAuthRule;
 import rbac.dao.repository.AdminUsers;
 import rbac.service.AdminAuthGroupAccessService;
@@ -37,7 +33,6 @@ import rbac.web.vo.ChooseRuleVO;
 import rbac.web.vo.ChooseUserVO;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -123,9 +118,12 @@ public class AuthGroupController {
         if (group == null) {
             return Result.wrapResult(AdminAuthGroupLang.GROUP_NOT_EXISTS);
         }
-        List<AdminAuthRule> rules = adminAuthRuleDao.findByUuidIn(Splitter.on(",").splitToList(param.getRules()));
-        if (CollectionUtils.isEmpty(rules)) {
-            return Result.wrapResult(AdminAuthRuleLang.NOT_FOUND);
+        List<AdminAuthRule> rules = new ArrayList<>();
+        if (StringUtils.isNotEmpty(param.getRules())) {
+            rules = adminAuthRuleDao.findByUuidIn(Splitter.on(",").splitToList(param.getRules()));
+            if (CollectionUtils.isEmpty(rules)) {
+                return Result.wrapResult(AdminAuthRuleLang.NOT_FOUND);
+            }
         }
         return adminAuthGroupService.modifyRules(group, rules);
     }
@@ -216,9 +214,12 @@ public class AuthGroupController {
         if (adminAuthGroup == null) {
             return Result.wrapResult(AdminAuthGroupLang.GROUP_NOT_EXISTS);
         }
-        List<AdminUsers> userList = adminUsersDao.findByUuidIn(param.getUserUuid());
-        if (CollectionUtils.isEmpty(userList)) {
-            return Result.wrapResult(AdminUsersLang.NOT_FOUND);
+        List<AdminUsers> userList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(param.getUserUuid())) {
+            userList = adminUsersDao.findByUuidIn(param.getUserUuid());
+            if (CollectionUtils.isEmpty(userList)) {
+                return Result.wrapResult(AdminUsersLang.NOT_FOUND);
+            }
         }
         return adminAuthGroupAccessService.addUsers2Group(adminAuthGroup, userList);
     }

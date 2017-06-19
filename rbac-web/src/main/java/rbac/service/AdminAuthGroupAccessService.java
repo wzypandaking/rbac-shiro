@@ -10,6 +10,7 @@ import rbac.dao.AdminAuthGroupDao;
 import rbac.dao.repository.AdminAuthGroup;
 import rbac.dao.repository.AdminAuthGroupAccess;
 import rbac.dao.repository.AdminUsers;
+import rbac.utils.AdministratorUtil;
 import rbac.utils.Result;
 import rbac.web.lang.AdminAuthGroupAccessLang;
 import rbac.web.lang.AdminAuthGroupLang;
@@ -39,7 +40,15 @@ public class AdminAuthGroupAccessService {
      */
     @Transactional
     public Result addUsers2Group(AdminUsers user) {
-        AdminAuthGroup group = adminAuthGroupDao.findById(2L);
+        if (AdministratorUtil.isSuper()) {
+            return addUsers2Group(user, 2L);
+        } else {
+            return addUsers2Group(user, 3L);
+        }
+    }
+
+    private Result addUsers2Group(AdminUsers user, Long groupId) {
+        AdminAuthGroup group = adminAuthGroupDao.findById(groupId);
         if (group == null) {
             return Result.wrapResult(AdminAuthGroupLang.GROUP_NOT_EXISTS);
         }
