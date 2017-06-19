@@ -128,9 +128,16 @@ public class AdminUsersService {
         adminUsersDao.save(user);
         Result result = adminAuthGroupAccessService.addUsers2Group(user);
         if (!result.isSuccess()) {
-            String sql = "INSERT INTO `admin_auth_group` (`id`, `uuid`, `title`, `status`, `type`, `create_time`, `creator`, `edit_time`, `editor`, `rules`)\n" +
-                    "VALUES\n" +
-                    "\t(2, '3f47d786a65c4df59b3f5dfe79d72262', '普通用户组', 1, 1, '2017-06-13 16:50:28', 1, '2017-06-13 16:50:28', 1, '35,36,37');\n";
+            String sql;
+            if (AdministratorUtil.isSuper()) {
+                sql = "INSERT INTO `admin_auth_group` (`id`, `uuid`, `title`, `status`, `type`, `create_time`, `creator`, `edit_time`, `editor`, `rules`)\n" +
+                        "VALUES\n" +
+                        "\t(2, '3f47d786a65c4df59b3f5dfe79d72262', '权限控制组', 1, 1, '2017-06-13 16:50:28', 1, NULL, 1, '2,3,4,5,6,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,35,36,37,38');\n";
+            } else {
+                sql = "INSERT INTO `admin_auth_group` (`id`, `uuid`, `title`, `status`, `type`, `create_time`, `creator`, `edit_time`, `editor`, `rules`)\n" +
+                        "VALUES\n" +
+                        "\t(3, '44f128f354ec4aedb52a6ae7fa5ecb82', '普通用户组', 1, 1, '2017-06-13 18:29:00', 1, NULL, 1, '35,36,37');\n";
+            }
             throw new RuntimeException(result.getMessage() + "。请执行SQL:" + sql);
         }
         return user.getId();
