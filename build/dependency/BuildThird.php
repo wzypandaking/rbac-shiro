@@ -56,8 +56,8 @@ function checkLicenseKeyAndGetLicense($licenseKey) {
     return $license;
 }
 
-$userId = checkUserAndGetUserId($username, $password);
-checkGroup($userId);
+$user = checkUserAndGetUserId($username, $password);
+checkGroup($user['id']);
 $license = checkLicenseKeyAndGetLicense($licenseKey);
 
 
