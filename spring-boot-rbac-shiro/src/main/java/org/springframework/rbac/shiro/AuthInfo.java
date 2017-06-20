@@ -22,4 +22,8 @@ public class AuthInfo {
      * 当前用户拥有的权限
      */
     private List<String> permissions;
+
+
+    private List<Menu> menus;
+
 }

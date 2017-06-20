@@ -2,16 +2,20 @@ package rbac.web.client.api;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.rbac.shiro.Menu;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import rbac.dao.AdminUsersDao;
+import rbac.dao.repository.AdminAdminNav;
 import rbac.dao.repository.AdminUsers;
 import rbac.dao.repository.AdminVersionLicense;
 import rbac.service.AdminAdminNavService;
 import rbac.service.AdminDepartmentService;
 import rbac.service.AdminUsersService;
+import rbac.utils.BeanUtil;
 import rbac.utils.Result;
 import rbac.web.client.ClientApiRequestParam;
 import rbac.web.client.RestClientApi;
@@ -89,11 +93,46 @@ public class RestClientAuthApi extends RestClientApi {
         userUUids.add(uuid);
 
         Map<String, Object> resultMap = new HashMap<>();
+
         resultMap.put("permission", rules);
-        resultMap.put("menus", adminAdminNavService.getClientMenu(buildUser));
+        resultMap.put("menus", buildMenu(buildUser));
         resultMap.put("uuid", userUUids);
 
         return response(request.getObject("license", AdminVersionLicense.class), resultMap);
+    }
+
+    private List<Menu> buildMenu(AdminUsers buildUser) {
+        List<AdminAdminNav> navList = adminAdminNavService.getClientMenu(buildUser);
+        Map<Long, List<AdminAdminNav>> navMap = new HashMap<>();
+        for (AdminAdminNav item : navList) {
+            List<AdminAdminNav> list = navMap.get(item.getPid());
+            if (CollectionUtils.isEmpty(list)) {
+                list = new ArrayList<>();
+            }
+            list.add(item);
+            navMap.put(item.getPid(), list);
+        }
+        List<Menu> menus = new ArrayList<>();
+        for (AdminAdminNav item : navMap.get(0L)) {
+            Menu menu = BeanUtil.copy(item, Menu.class);
+            menu.setChild(processMenu(item, navMap));
+            menus.add(menu);
+        }
+        return menus;
+    }
+
+    private List<Menu> processMenu(AdminAdminNav parent, Map<Long, List<AdminAdminNav>> navMap) {
+        List<AdminAdminNav> list = navMap.get(parent.getId());
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        List<Menu> menus = new ArrayList<>();
+        for (AdminAdminNav item : list) {
+            Menu menu = BeanUtil.copy(item, Menu.class);
+            menu.setChild(processMenu(item, navMap));
+            menus.add(menu);
+        }
+        return menus;
     }
 
 }
