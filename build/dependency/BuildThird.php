@@ -86,14 +86,14 @@ function buildPermissionRules($creator, $externalPaths) {
 }
 
 buildLicenseKey($user, $license, $externalPaths);
-buildPermissionRules($userId, $externalPaths);;
+buildPermissionRules($user['id'], $externalPaths);
 
 foreach($externalPaths as $path) {
     chdir($path);
     system("mvn clean install -Dmaven.test.skip");
 
     //  清空
-    file_put_contents("src/main/resources/rbac.lic", "");
     file_put_contents("src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, ""));
+    file_put_contents("src/main/resources/rbac.lic", " ");
     file_put_contents("src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, ""));
 }
