@@ -4,7 +4,7 @@
             targetNamespace="http://permissions.rbacshiro.com">
     <xsd:simpleType name="Permissions">
         <xsd:restriction xml:base="xsd:token">
-
+            
         </xsd:restriction>
     </xsd:simpleType>
     <xsd:element name="hasPermission">

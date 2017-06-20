@@ -91,7 +91,8 @@ buildPermissionRules($userId, $externalPaths);;
 foreach($externalPaths as $path) {
     chdir($path);
     system("mvn clean install -Dmaven.test.skip");
+
     //  清空
-    file_put_contents($path . "src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, ''));
-    file_put_contents($path . "src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, ''));
+    file_put_contents("src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, implode($permissionJava, "\r\n\t")));
+    file_put_contents("src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, implode($permissionXsd, "\r\n\t\t\t")));
 }

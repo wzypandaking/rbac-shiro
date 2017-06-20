@@ -4,6 +4,7 @@ package org.springframework.rbac;
  * Created by pandaking on 2017/5/31.
  */
 public enum Permissions {
+    
 
     ;
     private String name;
