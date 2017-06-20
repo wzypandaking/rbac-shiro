@@ -25,7 +25,7 @@ mysql_select_db($mysql_db_name);
 mysql_query("set names {$mysql_charset}");
 
 function checkUserAndGetUserId($username, $password) {
-    $user = mysql_fetch_assoc(mysql_query("select id, username, password, salt from admin_users where username='{$username}'"));
+    $user = mysql_fetch_assoc(mysql_query("select id, uuid, username, password, salt from admin_users where username='{$username}'"));
     if(empty($user)) {
         exit("没有找到用户");
     }
@@ -33,7 +33,7 @@ function checkUserAndGetUserId($username, $password) {
     if(strcmp($passwordStr, $user['password']) != 0) {
         exit("密码不正确");
     }
-    return $user['id'];
+    return $user;
 }
 
 function checkGroup($userId) {
@@ -61,8 +61,8 @@ checkGroup($userId);
 $license = checkLicenseKeyAndGetLicense($licenseKey);
 
 
-function buildLicenseKey($license, $externalPaths) {
-    $licenseContent = "{$license[license]}\r\n$license[public_key]";
+function buildLicenseKey($user, $license, $externalPaths) {
+    $licenseContent = "{$user[uuid]}\r\n{$license[license]}\r\n{$license[public_key]}";
     foreach($externalPaths as $path) {
         file_put_contents($path . "src/main/resources/rbac.lic", $licenseContent);
     }
@@ -85,7 +85,7 @@ function buildPermissionRules($creator, $externalPaths) {
     }
 }
 
-buildLicenseKey($licenseKey, $externalPaths);
+buildLicenseKey($user, $license, $externalPaths);
 buildPermissionRules($userId, $externalPaths);;
 
 foreach($externalPaths as $path) {
@@ -93,6 +93,7 @@ foreach($externalPaths as $path) {
     system("mvn clean install -Dmaven.test.skip");
 
     //  清空
-    file_put_contents("src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, implode($permissionJava, "\r\n\t")));
-    file_put_contents("src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, implode($permissionXsd, "\r\n\t\t\t")));
+    file_put_contents("src/main/resources/rbac.lic", "");
+    file_put_contents("src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, ""));
+    file_put_contents("src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, ""));
 }
