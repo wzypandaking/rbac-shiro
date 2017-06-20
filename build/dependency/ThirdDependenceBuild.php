@@ -15,7 +15,7 @@ if(! $licenseKey) {
 }
 
 $externalPaths = [
-    "../spring-boot-rbac-shiro/"
+    "../../spring-boot-rbac-shiro/"
 ];
 
 
@@ -36,6 +36,13 @@ function checkUserAndGetUserId($username, $password) {
     return $user['id'];
 }
 
+function checkGroup($userId) {
+    $groupAccess = mysql_fetch_assoc(mysql_query("select id from admin_auth_group_access where uid='{$userId}' and group_id=2"));
+    if(empty($groupAccess)) {
+        exit("你不在“权限控制组”无法进行构建");
+    }
+}
+
 function checkLicenseKeyAndGetLicense($licenseKey) {
     $result = mysql_query("select license,public_key,expire_time  from admin_version_license where license='$licenseKey'");
     $license = mysql_fetch_assoc($result);
@@ -50,6 +57,7 @@ function checkLicenseKeyAndGetLicense($licenseKey) {
 }
 
 $userId = checkUserAndGetUserId($username, $password);
+checkGroup($userId);
 $license = checkLicenseKeyAndGetLicense($licenseKey);
 
 
@@ -83,4 +91,7 @@ buildPermissionRules($userId, $externalPaths);;
 foreach($externalPaths as $path) {
     chdir($path);
     system("mvn clean install -Dmaven.test.skip");
+    //  清空
+    file_put_contents($path . "src/main/java/org/springframework/rbac/Permissions.java", sprintf($permissionJavaTemplate, ''));
+    file_put_contents($path . "src/main/resources/permission-rbac-shior.xsd", sprintf($permissionXsdTemplate, ''));
 }
