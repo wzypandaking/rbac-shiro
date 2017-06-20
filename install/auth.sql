@@ -7,9 +7,8 @@
 #
 # Host: 127.0.0.1 (MySQL 5.1.44)
 # Database: auth
-# Generation Time: 2017-06-14 07:52:40 +0000
+# Generation Time: 2017-06-20 09:09:46 +0000
 # ************************************************************
-
 CREATE DATABASE `auth` /*!40100 DEFAULT CHARACTER SET utf8 */
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -46,8 +45,8 @@ LOCK TABLES `admin_auth_group` WRITE;
 INSERT INTO `admin_auth_group` (`id`, `uuid`, `title`, `status`, `type`, `create_time`, `creator`, `edit_time`, `editor`, `rules`)
 VALUES
 	(1,'31ba1aa767894b00836f58bfacc9c1bc','超级管理员',1,1,'2017-06-05 14:54:07',1,NULL,1,'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33'),
-	(2,'3f47d786a65c4df59b3f5dfe79d72262','普通用户组',1,1,'2017-06-13 16:50:28',1,'2017-06-13 16:50:28',1,'35,36,37'),
-	(3,'44f128f354ec4aedb52a6ae7fa5ecb82','系统测试用户组',1,2,'2017-06-13 18:29:00',1,'2017-06-13 18:29:00',1,'');
+	(2,'3f47d786a65c4df59b3f5dfe79d72262','权限控制组',1,1,'2017-06-13 16:50:28',1,NULL,1,'2,3,4,5,6,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,35,36,37,38'),
+	(3,'44f128f354ec4aedb52a6ae7fa5ecb82','普通用户组',1,1,'2017-06-13 18:29:00',1,NULL,1,'35,36,37');
 
 /*!40000 ALTER TABLE `admin_auth_group` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -77,9 +76,7 @@ LOCK TABLES `admin_auth_group_access` WRITE;
 
 INSERT INTO `admin_auth_group_access` (`id`, `uuid`, `uid`, `group_id`, `create_time`, `creator`, `edit_time`, `editor`)
 VALUES
-	(1,'cb037c25a170446d82120598d9ebf86d',1,1,'2017-06-01 14:28:47',1,NULL,0),
-	(3,'72d3c9f2e86f4fc3bb1d865cc00c6230',7,2,'2017-06-13 17:17:31',1,'2017-06-13 17:17:31',1),
-	(4,'bb3a0dbe13984ab0b1d866e842922caa',7,3,'2017-06-13 18:31:08',1,'2017-06-13 18:31:08',1);
+	(1,'cb037c25a170446d82120598d9ebf86d',1,1,'2017-06-01 14:28:47',1,NULL,0);
 
 /*!40000 ALTER TABLE `admin_auth_group_access` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -219,18 +216,18 @@ LOCK TABLES `admin_nav` WRITE;
 INSERT INTO `admin_nav` (`id`, `uuid`, `pid`, `name`, `mca`, `ico`, `order_number`, `create_time`, `creator`, `edit_time`, `editor`, `rule`)
 VALUES
 	(1,'0c12bf7ce24e4efd83999632fad70eca',0,'系统控制','javascript:','fa-cog',2,'2017-06-01 14:28:34',1,'2017-06-07 17:09:14',1,'rbac/system'),
-	(2,'391329cee3544266b231aae5f2fccee4',1,'菜单管理','/rbac/menus.html','fa-bars',4,'2017-06-01 14:28:34',1,'2017-06-06 10:44:40',1,'rbac/system/menu'),
+	(2,'391329cee3544266b231aae5f2fccee4',1,'菜单管理','menus.html','fa-bars',4,'2017-06-01 14:28:34',1,'2017-06-06 10:44:40',1,'rbac/system/menu'),
 	(3,'aca415a968b14361a830c340ff93e685',0,'权限控制','javascript:','fa-umbrella',4,'2017-06-01 14:28:34',1,'2017-06-07 17:09:34',1,'rbac/authority'),
 	(4,'46005e3dbffa41ccb48d725207029b40',0,'版本控制','javascript:','fa-code-fork',2,'2017-06-01 14:28:34',1,'2017-06-07 17:09:22',1,'rbac/vc'),
-	(5,'92443a5a99054d3ea41e443c98ffe7c8',4,'版本管理','/rbac/version.html','fa-tags',10,'2017-06-01 14:28:34',1,'2017-06-06 10:44:55',1,'rbac/vc/version'),
-	(6,'f5f3a7e21ee146569a6557b105faba37',4,'序列号管理','/rbac/license.html','fa-file-text',20,'2017-06-01 14:28:34',1,'2017-06-06 10:45:02',1,'rbac/vc/license'),
-	(7,'39dcf44a50c24cbc93152304cf202e8c',3,'账号管理','/rbac/users.html','fa-user',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:45:26',1,'rbac/authority/user'),
-	(8,'02343780a4034e8e9284a4e12c4579ab',3,'用户组管理','/rbac/groups.html','fa-group',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:45:37',1,'rbac/authority/group'),
-	(9,'2a21644b77174247a865349e6ec2d027',3,'权限管理','/rbac/rules.html','fa-book',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:45:52',1,'rbac/authority/rule'),
-	(11,'6925c56cdf974f02b304dc384a3e0f59',3,'部门管理','/rbac/department.html','fa-sitemap',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:46:01',1,'rbac/authority/department'),
+	(5,'92443a5a99054d3ea41e443c98ffe7c8',4,'版本管理','version.html','fa-tags',10,'2017-06-01 14:28:34',1,'2017-06-06 10:44:55',1,'rbac/vc/version'),
+	(6,'f5f3a7e21ee146569a6557b105faba37',4,'序列号管理','license.html','fa-file-text',20,'2017-06-01 14:28:34',1,'2017-06-06 10:45:02',1,'rbac/vc/license'),
+	(7,'39dcf44a50c24cbc93152304cf202e8c',3,'账号管理','users.html','fa-user',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:45:26',1,'rbac/authority/user'),
+	(8,'02343780a4034e8e9284a4e12c4579ab',3,'用户组管理','groups.html','fa-group',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:45:37',1,'rbac/authority/group'),
+	(9,'2a21644b77174247a865349e6ec2d027',3,'权限管理','rules.html','fa-book',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:45:52',1,'rbac/authority/rule'),
+	(11,'6925c56cdf974f02b304dc384a3e0f59',3,'部门管理','department.html','fa-sitemap',1000,'2017-06-01 14:28:34',1,'2017-06-06 10:46:01',1,'rbac/authority/department'),
 	(13,'ceaee49cef6f497796783d0b1addb38e',0,'个人中心','javascript:','fa-home',1,'2017-06-07 17:08:58',1,'2017-06-11 17:53:32',NULL,'rbac/profile'),
-	(14,'da8760949ec24b01a98f71660c84b9c8',13,'个人信息','/rbac/profile.html','fa-male',1000,'2017-06-07 17:11:44',1,'2017-06-07 18:03:53',1,'rbac/profile/info'),
-	(15,'c1bd254f3dce44c2b6e61d86eff136a7',13,'修改密码','/rbac/profile_change_password.html','fa-credit-card',1000,'2017-06-07 17:18:05',1,'2017-06-07 18:04:13',1,'rbac/profile/chpaswd');
+	(14,'da8760949ec24b01a98f71660c84b9c8',13,'个人信息','profile.html','fa-male',1000,'2017-06-07 17:11:44',1,'2017-06-07 18:03:53',1,'rbac/profile/info'),
+	(15,'c1bd254f3dce44c2b6e61d86eff136a7',13,'修改密码','profile-chpasswd.html','fa-credit-card',1000,'2017-06-07 17:18:05',1,'2017-06-07 18:04:13',1,'rbac/profile/chpaswd');
 
 /*!40000 ALTER TABLE `admin_nav` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -3762,8 +3759,7 @@ LOCK TABLES `admin_users` WRITE;
 
 INSERT INTO `admin_users` (`id`, `uuid`, `username`, `password`, `salt`, `avatar`, `email`, `email_code`, `phone`, `status`, `register_time`, `last_login_ip`, `last_login_time`, `create_time`, `creator`, `edit_time`, `editor`)
 VALUES
-	(1,'99251d7960084befa15d2afed4d9325e','admin','1ef0632cf2e02d51687820ebc0bd1985','amde','','333597649@qq.com','','13093773528',1,'2017-05-12 16:50:30','127.0.0.1','2017-06-14 15:33:12','2017-06-02 17:12:54',1,'2017-06-01 14:13:55',1),
-	(7,'a2d1d8fca7e9444cbf66aa289afd64c1','test_001','8231db7927d74f6d16b6f0a712476dbe','oIdM',NULL,'12@qq.com',NULL,'13093773528',1,'2017-06-13 17:17:31','127.0.0.1','2017-06-14 14:19:44','2017-06-13 17:17:31',1,'2017-06-13 17:17:31',7);
+	(1,'99251d7960084befa15d2afed4d9325e','admin','1ef0632cf2e02d51687820ebc0bd1985','amde','avatar/1497599141982_Screenshot_20161012-161416.png','333597649@qq.com','','13093773528',1,'2017-05-12 16:50:30','127.0.0.1','2017-06-20 17:09:27','2017-06-02 17:12:54',1,'2017-06-01 14:13:55',1);
 
 /*!40000 ALTER TABLE `admin_users` ENABLE KEYS */;
 UNLOCK TABLES;
