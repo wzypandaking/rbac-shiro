@@ -10,6 +10,8 @@ import lombok.Setter;
 @Getter
 public class ClientApiRequestParam {
 
+    private String uuid;
+
     private String licenseKey;
 
     private String code;

@@ -22,4 +22,6 @@ public interface AdminAuthGroupAccessDao extends PagingAndSortingRepository<Admi
     Integer deleteByGroupId(Long groupId);
 
     List<AdminAuthGroupAccess> findByUid(Long uid);
+
+    AdminAuthGroupAccess findByUidAndGroupId(Long uid, Long groupId);
 }

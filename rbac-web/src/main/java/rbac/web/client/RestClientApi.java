@@ -7,8 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import rbac.dao.AdminAuthGroupAccessDao;
+import rbac.dao.AdminUsersDao;
 import rbac.dao.AdminVersionLicenseDao;
+import rbac.dao.repository.AdminAuthGroupAccess;
+import rbac.dao.repository.AdminUsers;
 import rbac.dao.repository.AdminVersionLicense;
 import rbac.utils.RSAUtil;
 import rbac.utils.Result;
@@ -29,11 +32,32 @@ public abstract class RestClientApi {
 
     @Autowired
     private AdminVersionLicenseDao adminVersionLicenseDao;
+    @Autowired
+    private AdminUsersDao adminUsersDao;
+    @Autowired
+    private AdminAuthGroupAccessDao adminAuthGroupAccessDao;
 
     protected Result<JSONObject> checkParam(ClientApiRequestParam param) {
         if (StringUtils.isBlank(param.getLicenseKey())) {
             return Result.wrapResult(AdminVersionLicenseLang.NOT_FOUND);
         }
+        {
+            if (StringUtils.isEmpty(param.getUuid())) {
+                log.error("构建的uuid不存在");
+                return Result.wrapResult(SystemLang.PARAM_WRONG);
+            }
+            AdminUsers buildUser = adminUsersDao.findByUuid(param.getUuid());
+            if (buildUser == null) {
+                log.error("构建的uuid不存在");
+                return Result.wrapResult(SystemLang.PARAM_WRONG);
+            }
+            AdminAuthGroupAccess access = adminAuthGroupAccessDao.findByUidAndGroupId(buildUser.getId(), 2L);
+            if (access == null) {
+                log.error("license被修改了");
+                return Result.wrapResult(SystemLang.PARAM_WRONG);
+            }
+        }
+
         AdminVersionLicense license = adminVersionLicenseDao.findByLicense(param.getLicenseKey());
         if (license == null) {
             return Result.wrapResult(AdminVersionLicenseLang.NOT_FOUND);

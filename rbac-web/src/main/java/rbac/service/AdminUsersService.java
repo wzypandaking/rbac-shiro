@@ -169,11 +169,13 @@ public class AdminUsersService {
         {
             Result checkResult = checkUser(user);
             if (!checkResult.isSuccess()) {
-                return Result.wrapErrorResult(checkResult.getMessage());
+                log.error(checkResult.getMessage());
+                return Result.wrapResult(Collections.EMPTY_SET);
             }
             Result<List<AdminAuthGroup>> result = adminAuthGroupService.getGroupsByUserId(user.getId());
             if (!result.isSuccess()) {
-                return Result.wrapErrorResult(result.getMessage());
+                log.error(result.getMessage());
+                return Result.wrapResult(Collections.EMPTY_SET);
             }
             list.addAll(result.getData());
         }

@@ -1,22 +1,26 @@
 package rbac.service;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import rbac.dao.AdminAdminNavDao;
-import rbac.dao.AdminAuthRuleDao;
 import rbac.dao.repository.AdminAdminNav;
-import rbac.dao.repository.AdminAuthRule;
 import rbac.dao.repository.AdminUsers;
 import rbac.utils.AdministratorUtil;
 import rbac.utils.Result;
 import rbac.web.lang.AdminAdminNavLang;
-import rbac.web.lang.SystemLang;
 
-import java.util.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by pandaking on 2017/5/24.
@@ -27,8 +31,7 @@ public class AdminAdminNavService {
     @Autowired
     private AdminAdminNavDao adminAdminNavDao;
     @Autowired
-    private AdminAuthRuleDao adminAuthRuleDao;
-
+    private AdminUsersService adminUsersService;
     /**
      * 添加菜单（子菜单）
      * 如果pUuid不为空，则天加子菜单
@@ -81,16 +84,22 @@ public class AdminAdminNavService {
      * @return
      */
     public List<AdminAdminNav> getMenu() {
-        List<Sort.Order> orderList = new ArrayList<>();
-        orderList.add(new Sort.Order(Sort.Direction.ASC, "orderNumber"));
-        orderList.add(new Sort.Order(Sort.Direction.ASC, "id"));
-        Sort sort = new Sort(orderList);
-        Iterable<AdminAdminNav> iterable = adminAdminNavDao.findAll(sort);
+        Iterable<AdminAdminNav> iterable = getMenu(1L);
         if (AdministratorUtil.isSuper()) {
             return Lists.newArrayList(iterable);
         }
-
         Set<String> rules = AdministratorUtil.getRules();
+        return filterMenu(iterable, rules);
+    }
+
+    /**
+     * 过滤掉没有权限的菜单
+     * @param iterable
+     * @param rules
+     * @return
+     */
+    private List<AdminAdminNav> filterMenu(Iterable<AdminAdminNav> iterable, Set<String> rules) {
+
         Iterator<AdminAdminNav> iterator = iterable.iterator();
         while (iterator.hasNext()) {
             AdminAdminNav adminAdminNav = iterator.next();
@@ -100,4 +109,35 @@ public class AdminAdminNavService {
         }
         return Lists.newArrayList(iterable);
     }
+
+    /**
+     * 获取项目菜单
+     * @param creator
+     * @return
+     */
+    private Iterable<AdminAdminNav> getMenu(Long creator) {
+        List<Sort.Order> orderList = new ArrayList<>();
+        orderList.add(new Sort.Order(Sort.Direction.ASC, "orderNumber"));
+        orderList.add(new Sort.Order(Sort.Direction.ASC, "id"));
+        Sort sort = new Sort(orderList);
+        return adminAdminNavDao.findAll(new Specification<AdminAdminNav>() {
+            @Override
+            public Predicate toPredicate(Root<AdminAdminNav> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.equal(root.get("creator"), creator);
+            }
+        }, sort);
+    }
+
+    /**
+     * 获取远程菜单
+     * @param user
+     * @return
+     */
+    public List<AdminAdminNav> getClientMenu(AdminUsers user) {
+        Iterable<AdminAdminNav> iterable = getMenu(user.getId());
+        Set<String> rules = adminUsersService.getRulesByUser(user).getData();
+        return filterMenu(iterable, rules);
+    }
+
+
 }

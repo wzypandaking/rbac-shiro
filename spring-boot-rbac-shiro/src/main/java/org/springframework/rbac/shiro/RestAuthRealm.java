@@ -35,6 +35,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
     private final String rbacLicenseFile = "rbac.lic";
     private PublicKey publicKey;
     private String licenseKey;
+    private String uuid;
 
     private String request(String api, Map<String, Object> param) {
         String url = String.format("%s/client/api/%s", rbacShiroUrl, api);
@@ -44,6 +45,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
                     .timeout(300)
                     .data(ImmutableMap.of(
                     "code", RSAUtil.encrypt(param, publicKey),
+                    "uuid", uuid,
                     "licenseKey", licenseKey
                     )).ignoreContentType(true)
                     .execute();
@@ -101,6 +103,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
         try {
             ClassPathResource resource = new ClassPathResource(rbacLicenseFile);
             BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+            uuid = reader.readLine();
             licenseKey = reader.readLine();
             publicKey = SerializeUtil.deserialize(Base64.getDecoder().decode(reader.readLine()), PublicKey.class);
         } catch (FileNotFoundException e) {

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rbac.dao.AdminUsersDao;
 import rbac.dao.repository.AdminUsers;
 import rbac.dao.repository.AdminVersionLicense;
+import rbac.service.AdminAdminNavService;
 import rbac.service.AdminDepartmentService;
 import rbac.service.AdminUsersService;
 import rbac.utils.Result;
@@ -29,6 +30,8 @@ public class RestClientAuthApi extends RestClientApi {
     private AdminDepartmentService adminDepartmentService;
     @Autowired
     private AdminUsersDao adminUsersDao;
+    @Autowired
+    private AdminAdminNavService adminAdminNavService;
 
     @RequestMapping(value = "auth/check", method = RequestMethod.POST)
     @ResponseBody
@@ -65,7 +68,7 @@ public class RestClientAuthApi extends RestClientApi {
             return paramCheckResult;
         }
         JSONObject request = paramCheckResult.getData();
-
+        AdminUsers buildUser = adminUsersDao.findByUuid(param.getUuid());
 
         String uuid = request.getString("uuid");
         AdminUsers user = adminUsersDao.findByUuid(uuid);
@@ -87,6 +90,7 @@ public class RestClientAuthApi extends RestClientApi {
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("permission", rules);
+        resultMap.put("menus", adminAdminNavService.getClientMenu(buildUser));
         resultMap.put("uuid", userUUids);
 
         return response(request.getObject("license", AdminVersionLicense.class), resultMap);

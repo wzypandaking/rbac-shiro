@@ -74,11 +74,7 @@ public class AdminController {
         //  权限
         {
             Result<Set<String>> rulesResult = adminUsersService.getRulesByUser(user);
-            Set<String> rules = new HashSet<>();
-            if (rulesResult.isSuccess()) {
-                rules = rulesResult.getData();
-            }
-            request.getSession().setAttribute("rules", rules);
+            request.getSession().setAttribute("rules", rulesResult.getData());
         }
 
         adminUsersService.userLogin(user);
