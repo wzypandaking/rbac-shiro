@@ -16,7 +16,7 @@ public enum RbacPermissions {
 	RBAC_VC_VERSION_ADD("rbac/vc/version/add", "添加版本"),
 	RBAC_VC_VERSION_LICENSE("rbac/vc/version/license", "查看序列号"),
 	RBAC_VC_VERSION_LICENSE_ADD("rbac/vc/version/license/add", "添加序列号"),
-	RBAC_VC_LICENSE_VIEW("rbac/vc/license/view", "查看序列号"),
+	RBAC_VC_LICENSE_VIEW("rbac/vc/license/view", "序列号下载"),
 	RBAC_AUTHORITY("rbac/authority", "权限控制"),
 	RBAC_AUTHORITY_USER("rbac/authority/user", "账号管理"),
 	RBAC_AUTHORITY_USER_ADD("rbac/authority/user/add", "添加账号"),

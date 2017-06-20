@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pandaking
- * Date: 2017/5/31
- * Time: 下午1:14
- */
+ini_set('date.timezone','Asia/Shanghai');
+error_reporting(0);
 
 $permissionJavaTemplate = 'package org.springframework.rbac;
 

@@ -1,13 +1,14 @@
 #!/usr/bin/php
 <?php
 include_once './Template.php';
+include_once './Config.ini.php';
 
 // $argv 可以接收参数
-$mysql = mysql_connect("127.0.0.1:3306","root", "");
-mysql_select_db("auth");
-mysql_query("set names utf8");
-$result = mysql_query("select name, title from admin_auth_rule where `name` like creator=1");
+$mysql = mysql_connect("{$mysql_host}:{$mysql_port}",$mysql_user, $mysql_password);
+mysql_select_db($mysql_db_name);
+mysql_query("set names {$mysql_charset}");
 
+$result = mysql_query("select name, title from admin_auth_rule where creator=1");
 
 $permissionJava = array();
 $permissionXsd = array();

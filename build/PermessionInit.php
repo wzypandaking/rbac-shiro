@@ -1,19 +1,15 @@
 #!/usr/bin/php
 <?php
-ini_set('date.timezone','Asia/Shanghai');
 include_once './Template.php';
+include_once './Config.ini.php';
 
-// $argv 可以接收参数
-$mysql = mysql_connect("127.0.0.1:3306","root", "");
-mysql_select_db("auth");
-mysql_query("set names utf8");
+fwrite(STDOUT, "输入用户名:");
+$username = trim(fgets(STDIN));
+fwrite(STDOUT, "输入密码:");
+$password = trim(fgets(STDIN));
+fwrite(STDOUT, "请输入序列号:");
+$licenseKey = trim(fgets(STDIN));
 
-$permissionPrefix = $argv[1];
-if(! $permissionPrefix || ! preg_match("/^[a-z|A-Z]{1,}$/", $permissionPrefix)) {
-    exit("请输入权限名称");
-}
-
-$licenseKey = $argv[2];
 if(! $licenseKey) {
     exit("请输入 License Key");
 }
@@ -22,26 +18,51 @@ $externalPaths = [
     "../spring-boot-rbac-shiro/"
 ];
 
-function buildLicenseKey() {
-    global $licenseKey, $externalPaths;
-    $result = mysql_query("select license,public_key,expire_time  from admin_version_license where uuid='$licenseKey'");
+
+// $argv 可以接收参数
+$mysql = mysql_connect("{$mysql_host}:{$mysql_port}",$mysql_user, $mysql_password);
+mysql_select_db($mysql_db_name);
+mysql_query("set names {$mysql_charset}");
+
+function checkUserAndGetUserId($username, $password) {
+    $user = mysql_fetch_assoc(mysql_query("select id, username, password, salt from admin_users where username='{$username}'"));
+    if(empty($user)) {
+        exit("没有找到用户");
+    }
+    $passwordStr = md5(md5($password) . $user['salt']);
+    if(strcmp($passwordStr, $user['password']) != 0) {
+        exit("密码不正确");
+    }
+    return $user['id'];
+}
+
+function checkLicenseKeyAndGetLicense($licenseKey) {
+    $result = mysql_query("select license,public_key,expire_time  from admin_version_license where license='$licenseKey'");
     $license = mysql_fetch_assoc($result);
     if(!$license) {
         exit("非法的License Key");
     }
-    if(strtotime($license['expire_time']) < time()) {
+    $second = time() - strtotime($license['expire_time']);
+    if($second > 0) {
         exit("License Key 已过期");
     }
+    return $license;
+}
+
+$userId = checkUserAndGetUserId($username, $password);
+$license = checkLicenseKeyAndGetLicense($licenseKey);
+
+
+function buildLicenseKey($license, $externalPaths) {
     $licenseContent = "{$license[license]}\r\n$license[public_key]";
     foreach($externalPaths as $path) {
         file_put_contents($path . "src/main/resources/rbac.lic", $licenseContent);
     }
 }
 
-function buildPermissionRules() {
-    global $permissionPrefix, $externalPaths;
+function buildPermissionRules($creator, $externalPaths) {
     global $permissionJavaTemplate, $permissionXsdTemplate;
-    $result = mysql_query("select name, title from admin_auth_rule where `name` like '$permissionPrefix%'");
+    $result = mysql_query("select name, title from admin_auth_rule where creator='$creator'");
     $permissionJava = array();
     $permissionXsd = array();
     while($rule = mysql_fetch_assoc($result)) {
@@ -56,8 +77,8 @@ function buildPermissionRules() {
     }
 }
 
-buildLicenseKey();
-buildPermissionRules();
+buildLicenseKey($licenseKey, $externalPaths);
+buildPermissionRules($userId, $externalPaths);;
 
 foreach($externalPaths as $path) {
     chdir($path);
