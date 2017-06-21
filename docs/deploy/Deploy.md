@@ -5,11 +5,10 @@
 *   MySQL
 
 ># 一、部署脚本&配置文件
->       ./install/application-prod.properties          #   系统配置文件
->
->       ./install/conf          #   部署脚本配置
->       ./install/build.sh      #   打包并部署
->       ./install/stop.sh       #   停止系统运行
+>       ./build/application-prod.properties          #   系统配置文件
+>       ./build/conf          #   部署脚本配置
+>       ./build/build.sh      #   打包并部署
+>       ./build/stop.sh       #   停止系统运行
 >## 1、脚本配置
 >
 >		# 项目路径
@@ -75,5 +74,7 @@
 >       1、cd ./build
 >       2、./stop.sh
 
-# 发布第三方权限依赖
-*   [Spring Boot](SpringBoot.md)
+
+# 权限依赖
+*   [主项目](MainDependency.md)
+*   [三方依赖包](ThirdDependency.md)
