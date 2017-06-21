@@ -20,7 +20,7 @@
 #
 >   ### 三、用户组分配
 >   1、系统用户组（参考下图）
->   ![](images/group_assign.JPG)           
+>   ![](images/group_assign.png)           
 
 ### 更多
 >   **权限管理**
