@@ -19,5 +19,5 @@ while($rule = mysql_fetch_assoc($result)) {
     $permissionXsd[] = '<xsd:enumeration value="' . $permission . '"/>';
 }
 
-file_put_contents("../rbac-web/src/main/java/rbac/RbacPermissions.java", sprintf($rbacPermissionJavaTemplate, implode($permissionJava, "\r\n\t")));
-file_put_contents("../rbac-web/src/main/resources/rbac-shior.xsd", sprintf($rbacPermissionXsdTemplate, implode($permissionXsd, "\r\n\t\t\t")));
+file_put_contents("../../rbac-web/src/main/java/rbac/RbacPermissions.java", sprintf($rbacPermissionJavaTemplate, implode($permissionJava, "\r\n\t")));
+file_put_contents("../../rbac-web/src/main/resources/rbac-shiro.xsd", sprintf($rbacPermissionXsdTemplate, implode($permissionXsd, "\r\n\t\t\t")));

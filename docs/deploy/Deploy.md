@@ -76,5 +76,18 @@
 
 
 # 权限依赖
-*   [主项目](MainDependency.md)
-*   [三方依赖包](ThirdDependency.md)
+        这个是rabc-shiro项目自己需要的权限依赖，由于所有的权限值都是存储在
+    数据库中，在实际开发中， 需要将这些 权限值放入程序中，为了方便项目
+    开发；专门提供了权限的代码生成器。
+        在使用这个模块的时候需要进行简单的配置，让这个模块可以访问到到数据库。
+    配置文件在 ./build/dependency/Config.ini.php 的文件中。
+    具体的配置如下：
+        $mysql_host = '127.0.0.1';  # 数据库IP地址
+        $mysql_port = '3306';       # 数据库的端口号
+        $mysql_user = 'root';       # 数据库用户
+        $mysql_password = '';       # 数据库密码
+        $mysql_db_name = 'auth';    # 数据库名称
+        $mysql_charset = 'utf8';    # 数据库编码
+        
+*   [主依赖](MainDependency.md)
+*   [三方依赖](ThirdDependency.md)
