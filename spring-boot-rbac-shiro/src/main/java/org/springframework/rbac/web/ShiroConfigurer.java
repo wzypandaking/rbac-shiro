@@ -36,7 +36,10 @@ public abstract class ShiroConfigurer {
 
     public abstract String getLoginUrl();
     public abstract String getSuccessUrl();
-    public abstract Map<String, Filter> filterMap();
+
+    public Map<String, Filter> filterMap() {
+        return Collections.EMPTY_MAP;
+    }
 
     @Bean
     public FilterRegistrationBean delegatingFilterProxy() {
