@@ -12,6 +12,8 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.rbac.shiro.RestAuthRealm;
+import org.springframework.rbac.shiro.RestCredentialsMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import rbac.thymeleaf.shiro.dialect.ShiroDialect;
@@ -76,10 +78,16 @@ public abstract class ShiroConfigurer {
     }
 
     @Bean("authRealm")
-    public abstract AuthorizingRealm authRealm(@Qualifier("credentialsMatcher")SimpleCredentialsMatcher matcher);
+    public AuthorizingRealm authRealm(@Qualifier("credentialsMatcher")SimpleCredentialsMatcher matcher) {
+        RestAuthRealm authRealm = new RestAuthRealm();
+        authRealm.setCredentialsMatcher(matcher);
+        return authRealm;
+    }
 
     @Bean("credentialsMatcher")
-    public abstract SimpleCredentialsMatcher credentialsMatcher();
+    public SimpleCredentialsMatcher credentialsMatcher() {
+        return new RestCredentialsMatcher();
+    }
 
     @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
