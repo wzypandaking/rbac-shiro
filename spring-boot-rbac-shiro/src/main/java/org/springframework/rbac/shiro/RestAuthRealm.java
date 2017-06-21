@@ -101,7 +101,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
 
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
-        session.setAttribute("menus", authInfo.getMenus());
+        session.setAttribute("authInfo", authInfo);
         return info;
     }
 
