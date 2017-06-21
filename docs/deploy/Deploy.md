@@ -88,3 +88,22 @@
         
 *   [主依赖](MainDependency.md)
 *   [三方依赖](ThirdDependency.md)
+
+
+# 四、使用
+
+>## 1、获取用户信息
+    Subject subject = SecurityUtils.getSubject();
+    Session session = subject.getSession();
+    org.springframework.rbac.shiro.Profile profile = session.getAttribute("profile");
+    
+    String username = profile.getUsername();
+    String avatar = profile.getAvatar();
+    
+>## 2、获取用户权限
+    Subject subject = SecurityUtils.getSubject();
+    Session session = subject.getSession();
+    org.springframework.rbac.shiro.AuthInfo authInfo = session.getAttribute("authInfo");
+    List<String> managerUuid = authInfo.getUuid();
+    List<org.springframework.rbac.shiro.Menu> menus = authInfo.getMenus();
+    List<String> permissions = authInfo.getPermissions();

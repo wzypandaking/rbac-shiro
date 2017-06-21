@@ -78,7 +78,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
         param.put("username", username);
         param.put("password", password);
         String result = request("auth/check", param);
-        RbacProfile profile = JSON.parseObject(result, RbacProfile.class);
+        Profile profile = JSON.parseObject(result, Profile.class);
         return new SimpleAuthenticationInfo(profile, "", this.getClass().getName());
     }
 
@@ -89,7 +89,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        RbacProfile profile = (RbacProfile) principalCollection.fromRealm(this.getClass().getName()).iterator().next();
+        Profile profile = (Profile) principalCollection.fromRealm(this.getClass().getName()).iterator().next();
         Map<String, Object> param = new HashMap<>();
         param.put("uuid", profile.getUuid());
         String result = request("auth/permission", param);
@@ -102,6 +102,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
         session.setAttribute("authInfo", authInfo);
+        session.setAttribute("profile", profile);
         return info;
     }
 

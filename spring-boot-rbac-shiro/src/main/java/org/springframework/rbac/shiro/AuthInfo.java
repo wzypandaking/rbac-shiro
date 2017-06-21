@@ -23,7 +23,9 @@ public class AuthInfo {
      */
     private List<String> permissions;
 
-
+    /**
+     * 应用中的菜单
+     */
     private List<Menu> menus;
 
 }

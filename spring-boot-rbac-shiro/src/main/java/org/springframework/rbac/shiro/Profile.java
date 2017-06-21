@@ -8,7 +8,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class RbacProfile {
+public class Profile {
 
     private String uuid;
 
