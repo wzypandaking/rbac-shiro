@@ -36,6 +36,3 @@
 >   **菜单管理**
 >   *   [菜单](docs/Menu.md)
 >   *   [序列号](docs/License.md)
->
->   **业务系统对接**
->   *   [对接文档](docs/deploy/Deploy.md)
