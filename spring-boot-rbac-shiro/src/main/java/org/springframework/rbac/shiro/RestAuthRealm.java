@@ -54,12 +54,12 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
                     .execute();
             JSONObject object = JSONObject.parseObject(response.body(), JSONObject.class);
             if (!object.getBoolean("success")) {
-                throw new AuthenticationException(object.getString("message"));
+                throw new AuthenticationException(response.body());
             }
             byte[] jsonBytes = RSAUtil.decrypt(Base64.getDecoder().decode(object.getString("data")), publicKey);
             return new String(jsonBytes, "UTF-8");
         } catch (Exception e) {
-            throw new AuthenticationException("请求异常");
+            throw new AuthenticationException("请求异常", e);
         }
     }
 
