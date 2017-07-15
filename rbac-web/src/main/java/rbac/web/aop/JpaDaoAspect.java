@@ -37,7 +37,8 @@ public class JpaDaoAspect {
             "/*/user/add",
             "/*/user/checkUsername",
             "/*/user/checkEmail",
-            "/*/user/checkMobile"
+            "/*/user/checkMobile",
+            "/*/client/**"
     ).asList();
 
     @Autowired
