@@ -1,6 +1,7 @@
 package org.springframework.rbac.web;
 
 
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -81,7 +82,7 @@ public abstract class ShiroConfigurer {
     }
 
     @Bean("authRealm")
-    public AuthorizingRealm authRealm(@Qualifier("credentialsMatcher")SimpleCredentialsMatcher matcher) {
+    public AuthorizingRealm authRealm(@Qualifier("credentialsMatcher")CredentialsMatcher matcher) {
         RestAuthRealm authRealm = new RestAuthRealm();
         authRealm.setCredentialsMatcher(matcher);
         return authRealm;
