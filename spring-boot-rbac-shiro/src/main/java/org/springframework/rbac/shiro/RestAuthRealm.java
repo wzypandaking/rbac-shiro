@@ -17,6 +17,7 @@ import org.jsoup.Jsoup;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.rbac.util.DESUtil;
 import org.springframework.rbac.util.RSAUtil;
 import org.springframework.rbac.util.SerializeUtil;
 
@@ -24,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.security.PublicKey;
 import java.util.*;
 
@@ -47,7 +49,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
                     .method(Connection.Method.POST)
                     .timeout(300)
                     .data(ImmutableMap.of(
-                    "code", RSAUtil.encrypt(param, publicKey),
+                    "code", URLEncoder.encode(RSAUtil.encrypt(param, publicKey), "UTF-8"),
                     "uuid", uuid,
                     "licenseKey", licenseKey
                     )).ignoreContentType(true)
@@ -56,8 +58,13 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
             if (!object.getBoolean("success")) {
                 throw new AuthenticationException(response.body());
             }
-            byte[] jsonBytes = RSAUtil.decrypt(Base64.getDecoder().decode(object.getString("data")), publicKey);
-            return new String(jsonBytes, "UTF-8");
+            String data = object.getString("data");
+            JSONObject client = JSON.parseObject(data);
+
+            String encryptKey = client.getString("key");
+            byte[] jsonBytes = RSAUtil.decrypt(Base64.getDecoder().decode(encryptKey), publicKey);
+            String key = new String(jsonBytes, "UTF-8");
+            return DESUtil.decrypt(client.getString("code"), key);
         } catch (Exception e) {
             throw new AuthenticationException("请求异常", e);
         }
@@ -96,7 +103,7 @@ public class RestAuthRealm extends AuthorizingRealm implements InitializingBean 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         AuthInfo authInfo = JSON.parseObject(result, new TypeReference<AuthInfo>(){}.getType());
         Set<String> permissions = new HashSet<>();
-        permissions.addAll(authInfo.getPermissions());
+        permissions.addAll(authInfo.getPermission());
         info.addStringPermissions(permissions);
 
         Subject subject = SecurityUtils.getSubject();

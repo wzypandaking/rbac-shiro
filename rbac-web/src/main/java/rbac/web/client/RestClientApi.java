@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.rbac.util.DESUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import rbac.dao.AdminAuthGroupAccessDao;
 import rbac.dao.AdminUsersDao;
@@ -18,9 +19,12 @@ import rbac.utils.Result;
 import rbac.utils.SerializeUtil;
 import rbac.web.lang.AdminVersionLicenseLang;
 import rbac.web.lang.SystemLang;
+import rbac.web.vo.client.ClientVO;
 
+import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -70,7 +74,7 @@ public abstract class RestClientApi {
         }
         try {
             PrivateKey privateKey = SerializeUtil.deserialize(Base64.getDecoder().decode(license.getPrivateKey()), PrivateKey.class);
-            JSONObject object = JSON.parseObject(RSAUtil.decrypt(Base64.getDecoder().decode(param.getCode()), privateKey), JSONObject.class);
+            JSONObject object = JSON.parseObject(RSAUtil.decrypt(Base64.getDecoder().decode(URLDecoder.decode(param.getCode(), "UTF-8")), privateKey), JSONObject.class);
             object.put("license", license);
             return Result.wrapResult(object);
         } catch (Exception e) {
@@ -82,10 +86,19 @@ public abstract class RestClientApi {
 
     protected Result response(AdminVersionLicense license, Map<String, Object> result) {
         try {
+            //  使用DES加密原始数据
             String json = JSON.toJSONString(result);
+            String key = DESUtil.buildSecurityKey();
+            String encryptString = DESUtil.encrypt(json, key);
+
+            //  使用RSA加密秘钥
             PrivateKey privateKey = SerializeUtil.deserialize(Base64.getDecoder().decode(license.getPrivateKey()), PrivateKey.class);
-            String data = Base64.getEncoder().encodeToString(RSAUtil.encrypt(json.getBytes(), privateKey));
-            return Result.wrapResult(data);
+            String encryptKey = Base64.getEncoder().encodeToString(RSAUtil.encrypt(key.getBytes(), privateKey));
+
+            ClientVO client = new ClientVO();
+            client.setCode(encryptString);
+            client.setKey(encryptKey);
+            return Result.wrapResult(JSON.toJSONString(client));
         } catch (Exception e) {
             throw new RuntimeException("加密失败", e);
         }

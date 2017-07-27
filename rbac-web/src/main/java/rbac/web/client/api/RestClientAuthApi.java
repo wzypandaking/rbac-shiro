@@ -113,6 +113,9 @@ public class RestClientAuthApi extends RestClientApi {
             navMap.put(item.getPid(), list);
         }
         List<Menu> menus = new ArrayList<>();
+        if (CollectionUtils.isEmpty(navMap)) {
+            return menus;
+        }
         for (AdminAdminNav item : navMap.get(0L)) {
             Menu menu = BeanUtil.copy(item, Menu.class);
             menu.setChild(processMenu(item, navMap));
