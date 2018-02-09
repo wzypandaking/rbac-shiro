@@ -168,12 +168,12 @@
     <shiro:hasPermission values="RBAC_SYSTEM_MENU_EDIT" logical="AND">
     <script>
         function editMenu(_self) {
+            $('input[name="uuid"]').val($(_self).data('uuid'));
             layer.open({
                 type:2,
                 content:[$(_self).data('target'), 'no'],
                 area:['550px', '500px']
             });
-            $('input[name="uuid"]').val($(this).data('uuid'));
         }
     </script>
     </shiro:hasPermission>
